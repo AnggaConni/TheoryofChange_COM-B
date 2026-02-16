@@ -64,7 +64,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .node-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         /* Metro Map Line */
@@ -137,6 +137,7 @@
                 btn_export: "Export Laporan",
                 placeholder_node: "Ketik isi atau klik 🪄 untuk AI...",
                 placeholder_api: "Masukkan API Key Gemini...",
+                placeholder_project: "Judul Project...",
                 lbl_impact: "Impact (Dampak)",
                 lbl_outcome: "Outcome (Hasil)",
                 lbl_output: "Output (Keluaran)",
@@ -161,8 +162,8 @@
                 tour_finish: "Selesai",
                 tour_step1_title: "1. Kunci Kecerdasan (API Key)",
                 tour_step1_desc: "Untuk menggunakan fitur AI (seperti analisis otomatis), Anda WAJIB memasukkan Gemini API Key. Klik link 'Get Key' jika belum punya.",
-                tour_step2_title: "2. Kanvas Logika",
-                tour_step2_desc: "Ini adalah alur logika program Anda. Klik pada kartu mana saja untuk mengedit isinya atau melihat detail.",
+                tour_step2_title: "2. Judul & Kanvas",
+                tour_step2_desc: "Beri nama program Anda di bagian judul. Klik tombol + di toolbar untuk menambah kartu baru.",
                 tour_step3_title: "3. Tongkat Sihir (Magic Wand)",
                 tour_step3_desc: "Bingung mau nulis apa? Klik ikon ini di dalam kartu. AI akan otomatis mengisi konten berdasarkan kartu sebelumnya.",
                 tour_step4_title: "4. Analisis Perilaku",
@@ -194,6 +195,7 @@
                 btn_export: "Export Report",
                 placeholder_node: "Type here or click 🪄 for AI...",
                 placeholder_api: "Enter Gemini API Key...",
+                placeholder_project: "Project Name...",
                 lbl_impact: "Impact",
                 lbl_outcome: "Outcome",
                 lbl_output: "Output",
@@ -218,8 +220,8 @@
                 tour_finish: "Finish",
                 tour_step1_title: "1. The Intelligence Key",
                 tour_step1_desc: "To use AI features (like auto-analysis), you MUST enter a Gemini API Key. Click 'Get Key' if you don't have one.",
-                tour_step2_title: "2. Logic Canvas",
-                tour_step2_desc: "This is your program logic flow. Click on any card to edit its content or view details.",
+                tour_step2_title: "2. Title & Canvas",
+                tour_step2_desc: "Name your program in the large title area. Use the toolbar buttons to add new logic cards.",
                 tour_step3_title: "3. Magic Wand",
                 tour_step3_desc: "Stuck on wording? Click this icon inside a card. AI will auto-fill it based on the previous cards context.",
                 tour_step4_title: "4. Behavioral Analysis",
@@ -301,7 +303,6 @@
                             plugins: { legend: { display: false } },
                             animation: {
                                 onComplete: () => {
-                                    // FIXED: Safe check before accessing chart properties
                                     if(onChartReady && chartRef.current && chartRef.current.canvas) {
                                         try {
                                             onChartReady(chartRef.current.toBase64Image());
@@ -383,6 +384,7 @@
             const [showArcadeModal, setShowArcadeModal] = useState(false);
             
             const [nodes, setNodes] = useState([]);
+            const [projectTitle, setProjectTitle] = useState("");
             const [selectedNodeId, setSelectedNodeId] = useState(null);
             const [combData, setCombData] = useState({});
             const [apiKey, setApiKey] = useState('');
@@ -394,10 +396,11 @@
             const nodeComb = (selectedNodeId && combData[selectedNodeId]) ? combData[selectedNodeId] : getInitialComb();
 
             // --- INITIALIZATION ---
-            const startSession = (sessionMode, isTut, initialData = []) => {
+            const startSession = (sessionMode, isTut, initialData = [], title = "") => {
                 setMode(sessionMode);
                 setIsTutorial(isTut);
                 setNodes(initialData);
+                setProjectTitle(title);
                 setShowTutorialModal(false);
                 setCombData({});
                 setSelectedNodeId(null);
@@ -460,12 +463,12 @@
 
             // --- SAVE / LOAD ---
             const saveProject = () => {
-                const data = { nodes, combData, mode, lang };
+                const data = { nodes, combData, mode, lang, projectTitle };
                 const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `impact_architect_${new Date().toISOString().slice(0,10)}.json`;
+                a.download = `impact_architect_${projectTitle.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -481,6 +484,7 @@
                         if(data.nodes) setNodes(data.nodes);
                         if(data.combData) setCombData(data.combData);
                         if(data.mode) setMode(data.mode);
+                        if(data.projectTitle) setProjectTitle(data.projectTitle);
                         alert("Project loaded!");
                     } catch(err) { alert("Invalid file"); }
                 };
@@ -575,10 +579,16 @@
                 if(!apiKey) { setShowArcadeModal(true); return; }
                 setLoadingState({ global: true, node: 'export' });
 
-                // 1. Get Comprehensive AI Analysis
+                // Open window immediately
+                const w = window.open('', '_blank');
+                if (w) {
+                    w.document.write('<html><head><title>Generating Report...</title><style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;background:#f8fafc;color:#1e293b}h1{color:#0ea5e9}</style></head><body><h1>ImpactArchitect AI</h1><p>Writing your strategic report... Please wait.</p></body></html>');
+                }
+
                 const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
                 const aiReport = await callGemini(`
                     Review this Theory of Change: ${tocText}.
+                    Project Title: ${projectTitle}.
                     Write a comprehensive strategic report including:
                     1. Executive Summary
                     2. Logic Flow Analysis
@@ -590,7 +600,7 @@
                 setLoadingState({ global: false, node: null });
 
                 const html = `
-                    <html><head><title>ImpactArchitect Strategic Report</title>
+                    <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 900px; margin: 0 auto; line-height: 1.6; }
@@ -608,8 +618,8 @@
                         .radar-snapshot { float: right; width: 300px; margin: 0 0 20px 20px; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
                     </style>
                     </head><body>
-                    <h1>ImpactArchitect Strategic Report</h1>
-                    <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    <h1>${projectTitle || 'Strategic Report'}</h1>
+                    <p><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
                     
                     <h2>1. Theory of Change Diagram</h2>
                     <div class="diagram-container">
@@ -637,7 +647,14 @@
                     
                     <script>window.print()<\/script></body></html>
                 `;
-                const w = window.open(); w.document.write(html); w.document.close();
+                
+                if (w) {
+                    w.document.open();
+                    w.document.write(html);
+                    w.document.close();
+                } else {
+                    alert("Please allow popups to view the report.");
+                }
             };
 
             const RiskTag = ({ level }) => {
@@ -658,12 +675,12 @@
                             <p className="text-slate-400 text-xl font-light">Behaviorally-Informed Policy IDE</p>
                         </div>
                         <div className="grid md:grid-cols-3 gap-6">
-                            <button onClick={() => startSession('design', false, [])} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                            <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
                                 <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30"><i className="fa-solid fa-pen-ruler text-2xl text-blue-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_new_title}</h2>
                                 <p className="text-sm text-slate-400 leading-relaxed mt-2">{t.lp_new_desc}</p>
                             </button>
-                            <button onClick={() => startSession('diag', false, [])} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-red-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                            <button onClick={() => startSession('diag', false, [], "Program Diagnostic")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-red-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
                                 <div className="w-14 h-14 bg-red-500/20 rounded-xl flex items-center justify-center mb-6 border border-red-500/30"><i className="fa-solid fa-stethoscope text-2xl text-red-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_fix_title}</h2>
                                 <p className="text-sm text-slate-400 leading-relaxed mt-2">{t.lp_fix_desc}</p>
@@ -680,8 +697,8 @@
                             <div className="bg-white text-slate-900 rounded-xl p-6 max-w-md w-full animate-fade-in shadow-2xl">
                                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><i className="fa-solid fa-graduation-cap text-amber-500"></i> {t.lp_modal_title}</h3>
                                 <div className="space-y-3">
-                                    <button onClick={() => startSession('design', true, TUTORIAL_DATA_NEW)} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group font-bold text-slate-800">{t.lp_new_title} (Demo)</button>
-                                    <button onClick={() => startSession('diag', true, TUTORIAL_DATA_FIX)} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-red-500 hover:bg-red-50 transition-all group font-bold text-slate-800">{t.lp_fix_title} (Demo)</button>
+                                    <button onClick={() => startSession('design', true, TUTORIAL_DATA_NEW, "Coffee Farmers Welfare Program")} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group font-bold text-slate-800">{t.lp_new_title} (Demo)</button>
+                                    <button onClick={() => startSession('diag', true, TUTORIAL_DATA_FIX, "Stunting Reduction Initiative")} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-red-500 hover:bg-red-50 transition-all group font-bold text-slate-800">{t.lp_fix_title} (Demo)</button>
                                 </div>
                                 <button onClick={() => setShowTutorialModal(false)} className="mt-4 w-full py-2 text-sm font-bold text-slate-400 hover:text-slate-600">Cancel</button>
                             </div>
@@ -737,7 +754,15 @@
                             </div>
                             <div className="flex-1 overflow-y-auto overflow-x-hidden relative p-8 custom-scrollbar">
                                 <div className="metro-line"></div>
-                                <div className="max-w-3xl mx-auto space-y-8 pb-20 relative z-10">
+                                <div className="w-full px-8 space-y-8 pb-20 relative z-10">
+                                    <input 
+                                        type="text" 
+                                        value={projectTitle} 
+                                        onChange={(e) => setProjectTitle(e.target.value)} 
+                                        className={`text-4xl font-bold text-slate-800 bg-transparent border-none focus:ring-0 w-full text-center mb-12 placeholder-slate-300 focus:bg-white/50 rounded-xl transition-all ${tourStep === 1 ? 'animate-pulse' : ''}`}
+                                        placeholder={t.placeholder_project} 
+                                    />
+
                                     {nodes.length === 0 ? (
                                         <div className="text-center py-20 opacity-40">
                                             <i className="fa-solid fa-diagram-project text-6xl mb-4 text-slate-300"></i>
@@ -748,21 +773,34 @@
                                             const layerNodes = nodes.filter(n => n.type === layer);
                                             if (layerNodes.length === 0) return null;
                                             return (
-                                                <div key={layer} className="relative">
-                                                    <div className="absolute -left-32 top-6 text-right w-24"><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t[NODE_TYPES[layer].key].split(' ')[0]}</span></div>
-                                                    <div className="grid gap-4">
+                                                <div key={layer} className="relative mb-16">
+                                                    <div className="flex justify-center items-center mb-6">
+                                                        <div className={`h-px w-12 bg-slate-300 mr-3`}></div>
+                                                        <span className={`text-sm font-bold uppercase tracking-widest text-slate-500`}>
+                                                            {t[NODE_TYPES[layer].key]}
+                                                        </span>
+                                                        <div className={`h-px w-12 bg-slate-300 ml-3`}></div>
+                                                    </div>
+                                                    <div className="flex flex-wrap justify-center gap-6 w-full">
                                                         {layerNodes.map(node => (
-                                                            <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-4 cursor-pointer ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
+                                                            <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full md:w-[48%] lg:w-[30%] flex-grow ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
                                                                 <button onClick={(e) => { e.stopPropagation(); aiFillNode(node.id, node.type, node.content); }} className={`absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-slate-300 hover:text-purple-500 hover:bg-purple-50 transition-colors ${tourStep === 2 ? 'bg-amber-100 text-amber-500 animate-bounce-slow shadow-lg ring-2 ring-amber-400' : ''}`} title={t.magic_hint}>
                                                                     {loadingState.node === node.id ? <i className="fa-solid fa-circle-notch fa-spin text-xs"></i> : <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>}
                                                                 </button>
                                                                 <div className="flex items-start gap-4">
-                                                                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${NODE_TYPES[node.type].color} flex items-center justify-center text-white shadow-md shrink-0`}><i className={`fa-solid ${NODE_TYPES[node.type].icon}`}></i></div>
+                                                                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${NODE_TYPES[node.type].color} flex items-center justify-center text-white shadow-md shrink-0`}><i className={`fa-solid ${NODE_TYPES[node.type].icon} text-lg`}></i></div>
                                                                     <div className="flex-1">
-                                                                        <textarea value={node.content} onChange={(e) => updateNode(node.id, 'content', e.target.value)} placeholder={t.placeholder_node} className="w-full bg-transparent border-none p-0 text-sm font-medium text-slate-700 placeholder-slate-300 focus:ring-0 resize-none h-auto leading-relaxed" rows={2} />
-                                                                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-50">
+                                                                        <textarea 
+                                                                            value={node.content} 
+                                                                            onChange={(e) => updateNode(node.id, 'content', e.target.value)} 
+                                                                            onInput={(e) => { e.target.style.height = "auto"; e.target.style.height = e.target.style.scrollHeight + "px"; }}
+                                                                            placeholder={t.placeholder_node} 
+                                                                            className="w-full bg-transparent border-none p-0 text-base font-medium text-slate-700 placeholder-slate-300 focus:ring-0 resize-none leading-relaxed overflow-hidden" 
+                                                                            rows={4} 
+                                                                        />
+                                                                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
                                                                             <RiskTag level={node.risk} />
-                                                                            <button onClick={(e) => deleteNode(node.id, e)} className="text-slate-300 hover:text-red-400 text-xs"><i className="fa-solid fa-trash"></i></button>
+                                                                            <button onClick={(e) => deleteNode(node.id, e)} className="text-slate-300 hover:text-red-400 text-sm"><i className="fa-solid fa-trash"></i></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
