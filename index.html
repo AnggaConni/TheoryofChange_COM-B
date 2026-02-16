@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v2.3</title>
+    <title>ImpactArchitect v2.6 - Angga Conni Saputra</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,11 +41,21 @@
                     animation: {
                         'bounce-slow': 'bounce 3s infinite',
                         'blink': 'blink 1s step-end infinite',
+                        'fade-in': 'fadeIn 0.3s ease-in',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
                     },
                     keyframes: {
                         blink: {
                             '0%, 100%': { opacity: '1' },
                             '50%': { opacity: '0' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px) translateX(-50%)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) translateX(-50%)' },
                         }
                     }
                 }
@@ -115,20 +125,29 @@
         const TRANSLATIONS = {
             id: {
                 // Landing Page
-                lp_new_title: "Program Baru",
-                lp_new_subtitle: "ToC → lalu COM-B",
-                lp_new_desc: "Tentukan dulu perubahan sistemiknya (ToC). Identifikasi perilaku kunci, lalu uji asumsi perilaku itu pakai COM-B.",
-                lp_fix_title: "Program Bermasalah",
-                lp_fix_subtitle: "COM-B → lalu Revisi ToC",
-                lp_fix_desc: "Diagnosis dulu kenapa perilaku gagal. Temuan COM-B biasanya membongkar asumsi ToC. Update ToC berdasarkan realitas.",
+                lp_new_title: "Mulai Program Baru",
+                lp_new_subtitle: "Desain & Diagnosis",
+                lp_new_desc: "Kanvas kosong untuk merancang ToC baru atau mendiagnosis program yang gagal. Termasuk fitur analisis COM-B lengkap.",
+                
                 lp_tut_title: "Tutorial & Sandbox",
                 lp_tut_subtitle: "Belajar & Eksperimen",
                 lp_tut_desc: "Gunakan data dummy untuk latihan analisis, edit, simpan, dan export. Panduan langkah demi langkah tersedia di sini.",
+                
                 lp_modal_title: "Pilih Skenario Tutorial",
                 
+                // Tutorial Scenarios
+                tut_scenario1_title: "🌱 Kesejahteraan Petani Kopi",
+                tut_scenario1_desc: "Audit ToC program peningkatan pendapatan petani melalui adopsi fermentasi kopi. Identifikasi asumsi perilaku yang lemah dan perbaiki.",
+                tut_scenario1_difficulty: "Pemula",
+                tut_scenario2_title: "👶 Reduksi Stunting Balita",
+                tut_scenario2_desc: "Diagnosis program gizi yang gagal. Output tercapai (distribusi berjalan) tapi outcome tidak (ibu tidak berubah perilaku). Temukan akar masalahnya.",
+                tut_scenario2_difficulty: "Menengah",
+                tut_what_learn: "Yang Akan Dipelajari:",
+                tut_start: "Mulai Tutorial",
+                tut_back: "Kembali",
+                
                 // App UI
-                mode_design: "Desain",
-                mode_diag: "Diagnosis",
+                mode_label: "Workspace",
                 toc_title: "Kanvas Theory of Change",
                 comb_title: "Analisis Perilaku (COM-B)",
                 btn_auto_complete: "Lengkapi Semua (AI)",
@@ -155,6 +174,9 @@
                 get_api_key: "Dapatkan API Key di sini",
                 analyzing: "Sedang Menganalisis...",
                 generating_report: "Menulis Laporan Lengkap...",
+                capability: "Kemampuan",
+                opportunity: "Kesempatan",
+                motivation: "Motivasi",
                 
                 // Tour
                 tour_next: "Lanjut",
@@ -173,20 +195,29 @@
             },
             en: {
                 // Landing Page
-                lp_new_title: "New Program",
-                lp_new_subtitle: "ToC → then COM-B",
-                lp_new_desc: "Define systemic change first (ToC). Identify key behaviors, then test behavioral assumptions using COM-B.",
-                lp_fix_title: "Problematic Program",
-                lp_fix_subtitle: "COM-B → then Revise ToC",
-                lp_fix_desc: "Diagnose why behavior failed first. COM-B findings usually reveal ToC assumptions. Update ToC based on reality.",
+                lp_new_title: "Start New Program",
+                lp_new_subtitle: "Design & Diagnose",
+                lp_new_desc: "Blank canvas to design a new ToC or diagnose a failed program. Includes full COM-B analysis features.",
+                
                 lp_tut_title: "Tutorial & Sandbox",
                 lp_tut_subtitle: "Learn & Experiment",
                 lp_tut_desc: "Use dummy data to practice analysis, editing, saving, and exporting. Step-by-step guide included.",
+                
                 lp_modal_title: "Select Tutorial Scenario",
 
+                // Tutorial Scenarios
+                tut_scenario1_title: "🌱 Coffee Farmer Welfare",
+                tut_scenario1_desc: "Audit a ToC for farmer income improvement through coffee fermentation adoption. Identify weak behavioral assumptions and improve them.",
+                tut_scenario1_difficulty: "Beginner",
+                tut_scenario2_title: "👶 Child Stunting Reduction",
+                tut_scenario2_desc: "Diagnose a failed nutrition program. Output achieved (distribution works) but outcome didn't (mothers didn't change behavior). Find the root cause.",
+                tut_scenario2_difficulty: "Intermediate",
+                tut_what_learn: "What You'll Learn:",
+                tut_start: "Start Tutorial",
+                tut_back: "Back",
+
                 // App UI
-                mode_design: "Design",
-                mode_diag: "Diagnosis",
+                mode_label: "Workspace",
                 toc_title: "Theory of Change Canvas",
                 comb_title: "Behavioral Analysis (COM-B)",
                 btn_auto_complete: "Auto-Complete All (AI)",
@@ -213,6 +244,9 @@
                 get_api_key: "Get API Key here",
                 analyzing: "Analyzing...",
                 generating_report: "Writing Full Report...",
+                capability: "Capability",
+                opportunity: "Opportunity",
+                motivation: "Motivation",
 
                 // Tour
                 tour_next: "Next",
@@ -246,19 +280,147 @@
             intervention: ''
         });
 
-        const TUTORIAL_DATA_NEW = [
-            { id: '1', type: 'impact', content: 'Kesejahteraan Petani Kopi Meningkat', risk: 'low' },
-            { id: '2', type: 'outcome', content: 'Petani mengadopsi teknik fermentasi pasca-panen baru', risk: 'high' },
-            { id: '3', type: 'output', content: 'Pelatihan teknis fermentasi diadakan', risk: 'low' }
-        ];
-
-        const TUTORIAL_DATA_FIX = [
-            { id: '10', type: 'impact', content: 'Reduksi Stunting Balita', risk: 'low' },
-            { id: '11', type: 'outcome', content: 'Ibu memberikan MPASI kaya protein setiap hari', risk: 'critical' },
-            { id: '12', type: 'output', content: 'Distribusi bubuk tabur gizi', risk: 'low' }
-        ];
+        // --- PRE-POPULATED TUTORIAL SCENARIOS ---
+        const TUTORIAL_SCENARIOS = {
+            scenario1: {
+                id: 'scenario1',
+                mode: 'design',
+                titleEN: 'Coffee Farmer Welfare Program - West Java',
+                titleID: 'Program Kesejahteraan Petani Kopi - Jawa Barat',
+                nodes: [
+                    { 
+                        id: '1', 
+                        type: 'impact', 
+                        content: 'Increase average household income of smallholder coffee farmers by 40% within 2 years',
+                        risk: 'low' 
+                    },
+                    { 
+                        id: '2', 
+                        type: 'outcome', 
+                        content: 'Farmers adopt wet-hulling fermentation technique and sell specialty-grade coffee to premium buyers',
+                        risk: 'high' 
+                    },
+                    { 
+                        id: '3', 
+                        type: 'output', 
+                        content: '200 farmers trained in wet-hulling fermentation and post-harvest processing',
+                        risk: 'low' 
+                    },
+                    { 
+                        id: '4', 
+                        type: 'activity', 
+                        content: 'Conduct 5-day hands-on workshop on fermentation tanks, pH monitoring, and quality control',
+                        risk: 'low' 
+                    }
+                ],
+                combData: {
+                    '2': {
+                        capability: { 
+                            score: 4, 
+                            notes: 'Farmers struggle with pH testing and timing - need constant monitoring every 6-8 hours' 
+                        },
+                        opportunity: { 
+                            score: 3, 
+                            notes: 'Most farmers lack fermentation tanks ($200 each). Water source inconsistent in dry season. Premium buyers require 5-ton minimum order.' 
+                        },
+                        motivation: { 
+                            score: 6, 
+                            notes: 'Initial interest high but risk-averse. Many saw neighbors fail with honey-process last year.' 
+                        },
+                        summary: 'The behavior "adopt wet-hulling technique" requires farmers to: (1) invest in equipment, (2) change daily routine for 72-hour monitoring, (3) trust unproven premium market',
+                        intervention: 'Consider: (1) Equipment subsidy or cooperative bulk-purchase, (2) WhatsApp reminder system for monitoring times, (3) Guaranteed purchase contract from roasters to reduce market risk'
+                    }
+                },
+                learningPoints: {
+                    en: [
+                        "Identify hidden capability barriers (technical skills vs equipment)",
+                        "Spot opportunity gaps (access to markets, infrastructure)",
+                        "Assess realistic motivation given past failures",
+                        "Revise activities to address COM-B gaps"
+                    ],
+                    id: [
+                        "Mengidentifikasi hambatan kemampuan tersembunyi (skill teknis vs peralatan)",
+                        "Menemukan gap kesempatan (akses pasar, infrastruktur)",
+                        "Menilai motivasi realistis mengingat kegagalan masa lalu",
+                        "Merevisi aktivitas untuk mengatasi gap COM-B"
+                    ]
+                }
+            },
+            scenario2: {
+                id: 'scenario2',
+                mode: 'diag',
+                titleEN: 'Stunting Reduction Program - East Nusa Tenggara',
+                titleID: 'Program Reduksi Stunting - Nusa Tenggara Timur',
+                nodes: [
+                    { 
+                        id: '10', 
+                        type: 'impact', 
+                        content: 'Reduce stunting prevalence from 42% to 30% in target villages within 3 years',
+                        risk: 'low' 
+                    },
+                    { 
+                        id: '11', 
+                        type: 'outcome', 
+                        content: 'Mothers provide protein-rich complementary food (eggs, fish, tempe) to children 6-24 months daily',
+                        risk: 'critical' 
+                    },
+                    { 
+                        id: '12', 
+                        type: 'output', 
+                        content: '500 sachets of micronutrient powder distributed monthly to 150 mothers through posyandu',
+                        risk: 'low' 
+                    },
+                    { 
+                        id: '13', 
+                        type: 'activity', 
+                        content: 'Monthly posyandu sessions with nutrition counseling and sachet distribution',
+                        risk: 'low' 
+                    }
+                ],
+                combData: {
+                    '11': {
+                        capability: { 
+                            score: 4, 
+                            notes: 'Mothers know eggs are good but lack knowledge on preparation for 6-9 month olds (texture, avoiding choking). Traditional porridge recipes don\'t include protein sources.' 
+                        },
+                        opportunity: { 
+                            score: 2, 
+                            notes: 'Eggs cost Rp2,000 each - unaffordable for daily use (household income Rp30k/day). Fish spoils quickly with no refrigeration. Tempe only available on market day (3x/week).' 
+                        },
+                        motivation: { 
+                            score: 3, 
+                            notes: 'Grandmothers believe babies only need breastmilk until teeth appear. Cultural taboo: fish causes worms, eggs cause allergies. Mothers fear social judgment if not following elders.' 
+                        },
+                        summary: 'Target behavior requires: (1) daily purchase mothers cannot afford, (2) defying mother-in-law authority, (3) preparing food using unknown technique. Output (powder distribution) does not address any of these root barriers.',
+                        intervention: 'CRITICAL REVISION NEEDED: (1) Switch to affordable protein (local beans, fish farming), (2) Engage grandmothers in counseling, (3) Cooking demonstrations with age-appropriate recipes, (4) Consider conditional cash transfer or subsidized eggs'
+                    }
+                },
+                learningPoints: {
+                    en: [
+                        "Diagnose the output-outcome gap (distribution ≠ behavior change)",
+                        "Identify economic barriers hidden in 'knowledge' programs",
+                        "Recognize social/cultural constraints on mother's autonomy",
+                        "Redesign intervention based on COM-B diagnosis"
+                    ],
+                    id: [
+                        "Mendiagnosis gap output-outcome (distribusi ≠ perubahan perilaku)",
+                        "Mengidentifikasi hambatan ekonomi tersembunyi di program 'edukasi'",
+                        "Mengenali kendala sosial/budaya pada otonomi ibu",
+                        "Merancang ulang intervensi berdasarkan diagnosis COM-B"
+                    ]
+                }
+            }
+        };
 
         // --- COMPONENTS ---
+
+        const Toast = ({ message, onClose }) => (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[120] flex items-center gap-3 animate-slide-up border border-slate-700">
+                <i className="fa-solid fa-robot text-amber-400 animate-pulse"></i>
+                <span className="text-sm font-medium">{message}</span>
+                <button onClick={onClose} className="ml-2 text-slate-400 hover:text-white"><i className="fa-solid fa-times"></i></button>
+            </div>
+        );
 
         const RadarChart = ({ data, labels, onChartReady }) => {
             const chartRef = useRef(null);
@@ -352,7 +514,7 @@
             );
         };
 
-        const ArcadeModal = ({ onClose }) => (
+        const ArcadeModal = ({ onClose, t }) => (
             <div className="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center font-arcade p-4 backdrop-blur-sm animate-fade-in">
                 <div className="bg-slate-800 border-4 border-amber-400 p-8 rounded-lg max-w-md text-center shadow-[0_0_50px_rgba(251,191,36,0.3)]">
                     <div className="text-amber-400 text-4xl mb-6 animate-bounce-slow">
@@ -374,6 +536,60 @@
             </div>
         );
 
+        const TutorialCard = ({ scenario, lang, onStart }) => {
+            const t = TRANSLATIONS[lang];
+            const learningPoints = scenario.learningPoints[lang];
+            
+            const difficultyColors = {
+                'Beginner': 'bg-green-100 text-green-700 border-green-200',
+                'Pemula': 'bg-green-100 text-green-700 border-green-200',
+                'Intermediate': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                'Menengah': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+            };
+
+            const scenarioKey = `tut_scenario${scenario.id.slice(-1)}_`;
+            const difficulty = t[scenarioKey + 'difficulty'];
+
+            return (
+                <div className="bg-white rounded-xl border border-slate-200 p-6 hover:border-blue-400 hover:shadow-lg transition-all group">
+                    <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                            {t[scenarioKey + 'title']}
+                        </h3>
+                        <span className={`text-xs font-bold px-3 py-1 rounded-full border ${difficultyColors[difficulty]}`}>
+                            {difficulty}
+                        </span>
+                    </div>
+                    
+                    <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                        {t[scenarioKey + 'desc']}
+                    </p>
+
+                    <div className="border-t border-slate-100 pt-4 mb-4">
+                        <p className="text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">
+                            {t.tut_what_learn}
+                        </p>
+                        <ul className="space-y-1.5">
+                            {learningPoints.map((point, idx) => (
+                                <li key={idx} className="text-xs text-slate-600 flex items-start gap-2">
+                                    <i className="fa-solid fa-check text-green-500 mt-0.5 text-[10px]"></i>
+                                    <span>{point}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <button 
+                        onClick={() => onStart(scenario)}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 group-hover:scale-105"
+                    >
+                        <i className="fa-solid fa-play"></i>
+                        {t.tut_start}
+                    </button>
+                </div>
+            );
+        };
+
         // --- MAIN APPLICATION ---
         function App() {
             const [lang, setLang] = useState('en');
@@ -382,6 +598,7 @@
             const [showTutorialModal, setShowTutorialModal] = useState(false);
             const [tourStep, setTourStep] = useState(-1);
             const [showArcadeModal, setShowArcadeModal] = useState(false);
+            const [toastMessage, setToastMessage] = useState(null);
             
             const [nodes, setNodes] = useState([]);
             const [projectTitle, setProjectTitle] = useState("");
@@ -396,13 +613,13 @@
             const nodeComb = (selectedNodeId && combData[selectedNodeId]) ? combData[selectedNodeId] : getInitialComb();
 
             // --- INITIALIZATION ---
-            const startSession = (sessionMode, isTut, initialData = [], title = "") => {
+            const startSession = (sessionMode, isTut, initialData = [], title = "", initialCombData = {}) => {
                 setMode(sessionMode);
                 setIsTutorial(isTut);
                 setNodes(initialData);
                 setProjectTitle(title);
                 setShowTutorialModal(false);
-                setCombData({});
+                setCombData(initialCombData);
                 setSelectedNodeId(null);
                 if (isTut) {
                     setTourStep(0);
@@ -410,6 +627,11 @@
                 } else {
                     setTourStep(-1);
                 }
+            };
+
+            const startTutorialScenario = (scenario) => {
+                const title = lang === 'id' ? scenario.titleID : scenario.titleEN;
+                startSession(scenario.mode, true, scenario.nodes, title, scenario.combData);
             };
 
             // --- CORE LOGIC ---
@@ -491,28 +713,83 @@
                 reader.readAsText(file);
             };
 
-            // --- AI INTEGRATION ---
+            // --- AI INTEGRATION (SMART SWITCHER) ---
             const callGemini = async (prompt, systemInstruction = "") => {
                 if (!apiKey) {
                     setShowArcadeModal(true);
                     return null;
                 }
-                try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemInstruction }] } })
-                    });
-                    const data = await res.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                } catch (e) { console.error(e); return "Error."; }
+                
+                // USER REQUEST: Default to 2.5, Fallback to 1.5
+                const models = [
+                    'gemini-2.5-flash-preview-09-2025', // Latest (Smartest, but low free quota)
+                    'gemini-1.5-flash'                  // Stable (Unlimited Free Tier)
+                ];
+
+                for (let i = 0; i < models.length; i++) {
+                    const model = models[i];
+                    try {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                contents: [{ parts: [{ text: prompt }] }], 
+                                systemInstruction: { parts: [{ text: systemInstruction }] } 
+                            })
+                        });
+
+                        if (!res.ok) {
+                            // If Resource Exhausted (429) or Not Found (404)
+                            if (res.status === 429 || res.status === 404 || res.status === 400) {
+                                console.warn(`Model ${model} failed (Status ${res.status})...`);
+                                
+                                // Show Toast Notification only if falling back
+                                if (i === 0 && models[i+1]) {
+                                    setToastMessage("⚠️ Quota 2.5 Habis. Beralih ke 1.5 (Unlimited/Free Tier)...");
+                                    setTimeout(() => setToastMessage(null), 5000);
+                                }
+                                
+                                continue; // Try next model
+                            }
+                            // Other errors
+                            const errText = await res.text();
+                            console.error("Gemini API Error:", errText);
+                            return null;
+                        }
+
+                        const data = await res.json();
+                        return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    } catch (e) { 
+                        console.error(`Fetch error with ${model}:`, e);
+                        continue;
+                    }
+                }
+                
+                setToastMessage("❌ Semua Model AI Sibuk. Coba 1 menit lagi.");
+                setTimeout(() => setToastMessage(null), 5000);
+                return null;
             };
 
             const aiFillNode = async (nodeId, type, currentContent) => {
                 setLoadingState({ global: false, node: nodeId });
+                
                 const nodeIndex = nodes.findIndex(n => n.id === nodeId);
-                const prevNode = nodeIndex > 0 ? nodes[nodeIndex - 1] : null;
-                const context = prevNode ? `Preceding step: "${prevNode.content}"` : "This is the starting point.";
-                const prompt = `Generate a realistic and specific ${type.toUpperCase()} for a development program. ${context}. Current draft: "${currentContent}". Output ONLY the content text.`;
+                const previousNodes = nodes.slice(0, nodeIndex).map(n => `[${n.type.toUpperCase()}]: ${n.content}`).join(" -> ");
+                const context = previousNodes ? `Context so far: ${previousNodes}` : "This is the first step of the program.";
+                
+                const prompt = `
+                    You are an expert policy consultant. 
+                    ${context}
+                    
+                    Task: Generate a realistic, specific, and logical content for the NEXT step which is a: ${type.toUpperCase()}.
+                    The current draft content is: "${currentContent}" (if empty, generate from scratch).
+                    
+                    Rules:
+                    1. Output ONLY the content text. No labels, no quotes.
+                    2. Be concise but specific.
+                    3. Ensure logical flow from previous steps.
+                `;
+                
                 const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
                 if (res) updateNode(nodeId, 'content', res);
                 setLoadingState({ global: false, node: null });
@@ -523,18 +800,21 @@
                 for (const node of nodes) {
                     if (!node.content || node.content.trim() === '') {
                         await aiFillNode(node.id, node.type, "");
-                        await new Promise(r => setTimeout(r, 500)); 
+                        await new Promise(r => setTimeout(r, 1000)); 
                     }
                 }
                 setLoadingState({ global: false, node: null });
             };
 
-            // NEW: Magic Wand for COM-B (Auto-Diagnose)
             const aiMagicComb = async () => {
-                if (!selectedNode) return;
-                setLoadingState({ global: true, node: null });
+                // IMPORTANT: Ensure selectedNode exists before calling
+                if (!selectedNodeId) return;
+                const targetNode = nodes.find(n => n.id === selectedNodeId);
+                if (!targetNode) return;
+
+                setLoadingState({ global: true, node: 'magic_comb' }); // Specific loading ID
                 
-                const prompt = `Analyze: "${selectedNode.content}". Estimate behavioral scores (1-10) for Capability, Opportunity, Motivation. Provide very short notes for each. Return valid JSON ONLY: { "c_score": 5, "c_note": "...", "o_score": 5, "o_note": "...", "m_score": 5, "m_note": "..." }`;
+                const prompt = `Analyze: "${targetNode.content}". Estimate behavioral scores (1-10) for Capability, Opportunity, Motivation. Provide very short notes for each. Return valid JSON ONLY: { "c_score": 5, "c_note": "...", "o_score": 5, "o_note": "...", "m_score": 5, "m_note": "..." }`;
                 
                 const res = await callGemini(prompt, "You are a JSON generator.");
                 if (res) {
@@ -558,18 +838,24 @@
             };
 
             const aiAnalyzeBehavior = async () => {
-                if (!selectedNode) return;
-                setLoadingState({ global: true, node: null });
-                const res = await callGemini(`Analyze specific behavior for: "${selectedNode.content}". Identify WHO needs to do WHAT.`, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
+                if (!selectedNodeId) return;
+                const targetNode = nodes.find(n => n.id === selectedNodeId);
+                if (!targetNode) return;
+
+                setLoadingState({ global: true, node: 'analyze_btn' });
+                const res = await callGemini(`Analyze specific behavior for: "${targetNode.content}". Identify WHO needs to do WHAT.`, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
                 if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), summary: res } }));
                 setLoadingState({ global: false, node: null });
             };
 
             const aiSuggestIntervention = async () => {
-                 if (!selectedNode) return;
-                setLoadingState({ global: true, node: null });
+                 if (!selectedNodeId) return;
+                 const targetNode = nodes.find(n => n.id === selectedNodeId);
+                 if (!targetNode) return;
+
+                setLoadingState({ global: true, node: 'intervention_btn' });
                 const d = nodeComb;
-                const prompt = `Scores C:${d.capability.score}, O:${d.opportunity.score}, M:${d.motivation.score} for "${selectedNode.content}". Suggest 3 interventions.`;
+                const prompt = `Scores C:${d.capability.score}, O:${d.opportunity.score}, M:${d.motivation.score} for "${targetNode.content}". Suggest 3 interventions.`;
                 const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
                 if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), intervention: res } }));
                 setLoadingState({ global: false, node: null });
@@ -579,7 +865,6 @@
                 if(!apiKey) { setShowArcadeModal(true); return; }
                 setLoadingState({ global: true, node: 'export' });
 
-                // Open window immediately
                 const w = window.open('', '_blank');
                 if (w) {
                     w.document.write('<html><head><title>Generating Report...</title><style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;background:#f8fafc;color:#1e293b}h1{color:#0ea5e9}</style></head><body><h1>ImpactArchitect AI</h1><p>Writing your strategic report... Please wait.</p></body></html>');
@@ -616,6 +901,7 @@
                         .risk-high { border-left: 4px solid #f97316; } .risk-critical { border-left: 4px solid #ef4444; }
                         .ai-content { background: #fff; padding: 20px; border-radius: 8px; }
                         .radar-snapshot { float: right; width: 300px; margin: 0 0 20px 20px; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+                        .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; }
                     </style>
                     </head><body>
                     <h1>${projectTitle || 'Strategic Report'}</h1>
@@ -645,6 +931,9 @@
                          return n ? `<div class="node-box"><strong>Target:</strong> ${n.content}<br><br><strong>Diagnosis:</strong> ${v.summary}<br><strong>Intervention:</strong> ${v.intervention}</div>` : ''
                     }).join('')}
                     
+                    <div class="footer">
+                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect
+                    </div>
                     <script>window.print()<\/script></body></html>
                 `;
                 
@@ -667,40 +956,83 @@
                 <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white relative overflow-hidden">
                      <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="absolute top-6 right-6 text-xs font-bold bg-slate-800 px-3 py-1 rounded border border-slate-700 hover:border-blue-500 z-10">{lang.toUpperCase()}</button>
-                    <div className="max-w-6xl w-full z-10">
+                    <div className="max-w-4xl w-full z-10">
                         <div className="text-center mb-12">
                             <h1 className="text-6xl font-bold mb-4 tracking-tight flex justify-center items-center gap-4">
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">ImpactArchitect</span>
                             </h1>
                             <p className="text-slate-400 text-xl font-light">Behaviorally-Informed Policy IDE</p>
                         </div>
-                        <div className="grid md:grid-cols-3 gap-6">
-                            <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
-                                <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30"><i className="fa-solid fa-pen-ruler text-2xl text-blue-400"></i></div>
+                        
+                        {/* UPDATED MENU LAYOUT - 2 COLUMNS */}
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-10 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-blue-500/20"></div>
+                                <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30"><i className="fa-solid fa-layer-group text-2xl text-blue-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_new_title}</h2>
-                                <p className="text-sm text-slate-400 leading-relaxed mt-2">{t.lp_new_desc}</p>
+                                <span className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.lp_new_subtitle}</span>
+                                <p className="text-sm text-slate-400 leading-relaxed">{t.lp_new_desc}</p>
                             </button>
-                            <button onClick={() => startSession('diag', false, [], "Program Diagnostic")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-red-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
-                                <div className="w-14 h-14 bg-red-500/20 rounded-xl flex items-center justify-center mb-6 border border-red-500/30"><i className="fa-solid fa-stethoscope text-2xl text-red-400"></i></div>
-                                <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_fix_title}</h2>
-                                <p className="text-sm text-slate-400 leading-relaxed mt-2">{t.lp_fix_desc}</p>
-                            </button>
-                            <button onClick={() => setShowTutorialModal(true)} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-amber-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
-                                <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center mb-6 border border-amber-500/30"><i className="fa-solid fa-flask text-2xl text-amber-400"></i></div>
+
+                            <button onClick={() => setShowTutorialModal(true)} className="group bg-slate-800/80 backdrop-blur p-10 rounded-2xl border border-slate-700 hover:border-amber-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-amber-500/20"></div>
+                                <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center mb-6 border border-amber-500/30"><i className="fa-solid fa-graduation-cap text-2xl text-amber-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_tut_title}</h2>
-                                <p className="text-sm text-slate-400 leading-relaxed mt-2">{t.lp_tut_desc}</p>
+                                <span className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">{t.lp_tut_subtitle}</span>
+                                <p className="text-sm text-slate-400 leading-relaxed">{t.lp_tut_desc}</p>
                             </button>
                         </div>
+
+                        {/* NAME FOOTER */}
+                        <div className="mt-16 text-center text-slate-600 text-sm">
+                            <p>Created by <span className="text-slate-400 font-bold">Angga Conni Saputra</span></p>
+                        </div>
                     </div>
+                    
+                    {/* TUTORIAL MODAL */}
                     {showTutorialModal && (
-                        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                            <div className="bg-white text-slate-900 rounded-xl p-6 max-w-md w-full animate-fade-in shadow-2xl">
-                                <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><i className="fa-solid fa-graduation-cap text-amber-500"></i> {t.lp_modal_title}</h3>
-                                <div className="space-y-3">
-                                    <button onClick={() => startSession('design', true, TUTORIAL_DATA_NEW, "Coffee Farmers Welfare Program")} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group font-bold text-slate-800">{t.lp_new_title} (Demo)</button>
-                                    <button onClick={() => startSession('diag', true, TUTORIAL_DATA_FIX, "Stunting Reduction Initiative")} className="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-red-500 hover:bg-red-50 transition-all group font-bold text-slate-800">{t.lp_fix_title} (Demo)</button>
+                        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                            <div className="bg-white text-slate-900 rounded-2xl p-8 max-w-4xl w-full my-8 animate-fade-in shadow-2xl">
+                                <div className="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 className="text-2xl font-bold mb-2 flex items-center gap-3">
+                                            <i className="fa-solid fa-graduation-cap text-amber-500"></i> 
+                                            {t.lp_modal_title}
+                                        </h3>
+                                        <p className="text-sm text-slate-600">
+                                            {lang === 'id' 
+                                                ? 'Praktikkan audit & revisi ToC menggunakan data riil yang sudah disiapkan'
+                                                : 'Practice auditing & revising ToC using pre-populated real-world data'}
+                                        </p>
+                                    </div>
+                                    <button 
+                                        onClick={() => setShowTutorialModal(false)} 
+                                        className="text-slate-400 hover:text-slate-600 text-2xl w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
+                                    >
+                                        <i className="fa-solid fa-times"></i>
+                                    </button>
                                 </div>
-                                <button onClick={() => setShowTutorialModal(false)} className="mt-4 w-full py-2 text-sm font-bold text-slate-400 hover:text-slate-600">Cancel</button>
+                                
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {Object.values(TUTORIAL_SCENARIOS).map(scenario => (
+                                        <TutorialCard 
+                                            key={scenario.id} 
+                                            scenario={scenario} 
+                                            lang={lang}
+                                            onStart={startTutorialScenario}
+                                        />
+                                    ))}
+                                </div>
+
+                                <div className="mt-6 pt-6 border-t border-slate-200">
+                                    <button 
+                                        onClick={() => setShowTutorialModal(false)} 
+                                        className="w-full py-3 text-sm font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors"
+                                    >
+                                        <i className="fa-solid fa-arrow-left mr-2"></i>
+                                        {t.tut_back}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -709,15 +1041,19 @@
 
             return (
                 <div className="flex flex-col h-screen overflow-hidden text-slate-800">
-                    {showArcadeModal && <ArcadeModal onClose={() => setShowArcadeModal(false)} />}
+                    {showArcadeModal && <ArcadeModal onClose={() => setShowArcadeModal(false)} t={t} />}
                     {isTutorial && tourStep >= 0 && <TourOverlay step={tourStep} t={t} onNext={() => setTourStep(prev => prev >= 4 ? -1 : prev + 1)} onSkip={() => setTourStep(-1)} />}
+                    {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
 
                     <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-50 relative shadow-sm">
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
                             <div>
-                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">2.3</span></h1>
-                                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : mode === 'design' ? 'bg-blue-500' : 'bg-red-500'}`}>{isTutorial ? 'SANDBOX' : mode === 'design' ? t.mode_design.toUpperCase() : t.mode_diag.toUpperCase()}</span>
+                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">2.6</span></h1>
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
+                                    <span className="text-[9px] text-slate-400 font-medium">by Angga Conni Saputra</span>
+                                </div>
                             </div>
                         </div>
                         <div className={`flex-1 max-w-md mx-6 ${tourStep === 0 ? 'tour-highlight' : ''}`}>
@@ -781,9 +1117,10 @@
                                                         </span>
                                                         <div className={`h-px w-12 bg-slate-300 ml-3`}></div>
                                                     </div>
-                                                    <div className="flex flex-wrap justify-center gap-6 w-full">
+                                                    {/* UPDATED: Vertical Layout Stack */}
+                                                    <div className="flex flex-col items-center gap-4 w-full">
                                                         {layerNodes.map(node => (
-                                                            <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full md:w-[48%] lg:w-[30%] flex-grow ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
+                                                            <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full max-w-3xl ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
                                                                 <button onClick={(e) => { e.stopPropagation(); aiFillNode(node.id, node.type, node.content); }} className={`absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-slate-300 hover:text-purple-500 hover:bg-purple-50 transition-colors ${tourStep === 2 ? 'bg-amber-100 text-amber-500 animate-bounce-slow shadow-lg ring-2 ring-amber-400' : ''}`} title={t.magic_hint}>
                                                                     {loadingState.node === node.id ? <i className="fa-solid fa-circle-notch fa-spin text-xs"></i> : <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>}
                                                                 </button>
@@ -793,7 +1130,7 @@
                                                                         <textarea 
                                                                             value={node.content} 
                                                                             onChange={(e) => updateNode(node.id, 'content', e.target.value)} 
-                                                                            onInput={(e) => { e.target.style.height = "auto"; e.target.style.height = e.target.style.scrollHeight + "px"; }}
+                                                                            onInput={(e) => { e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px"; }}
                                                                             placeholder={t.placeholder_node} 
                                                                             className="w-full bg-transparent border-none p-0 text-base font-medium text-slate-700 placeholder-slate-300 focus:ring-0 resize-none leading-relaxed overflow-hidden" 
                                                                             rows={4} 
@@ -821,7 +1158,9 @@
                                     <div className="h-14 border-b border-slate-100 flex items-center justify-between px-6 bg-slate-50">
                                         <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wide"><i className="fa-solid fa-sliders text-blue-500"></i> {t.comb_title}</div>
                                         <div className="flex gap-2">
-                                            <button onClick={aiMagicComb} className="w-6 h-6 rounded flex items-center justify-center text-purple-500 bg-purple-50 hover:bg-purple-100 transition-colors" title="Magic Auto-Diagnose"><i className="fa-solid fa-wand-magic-sparkles text-xs"></i></button>
+                                            <button onClick={aiMagicComb} className="w-6 h-6 rounded flex items-center justify-center text-purple-500 bg-purple-50 hover:bg-purple-100 transition-colors" title="Magic Auto-Diagnose">
+                                                {loadingState.node === 'magic_comb' ? <i className="fa-solid fa-circle-notch fa-spin text-xs"></i> : <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>}
+                                            </button>
                                             <button onClick={() => setSelectedNodeId(null)} className="text-slate-400 hover:text-slate-600"><i className="fa-solid fa-xmark"></i></button>
                                         </div>
                                     </div>
@@ -839,11 +1178,11 @@
                                                 return (
                                                     <div key={domain} className="group">
                                                         <div className="flex justify-between items-center mb-2">
-                                                            <label className="capitalize text-sm font-bold text-slate-700">{domain}</label>
+                                                            <label className="capitalize text-sm font-bold text-slate-700">{t[domain]}</label>
                                                             <span className="text-xs font-mono font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded">{domainData.score}/10</span>
                                                         </div>
                                                         <input type="range" min="1" max="10" value={domainData.score} onChange={(e) => updateComb(domain, 'score', e.target.value)} className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-500 mb-2" />
-                                                        <textarea value={domainData.notes} onChange={(e) => updateComb(domain, 'notes', e.target.value)} placeholder={`Notes for ${domain}...`} className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-400 transition-colors resize-none" rows={2}></textarea>
+                                                        <textarea value={domainData.notes} onChange={(e) => updateComb(domain, 'notes', e.target.value)} placeholder={`Notes for ${t[domain]}...`} className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-400 transition-colors resize-none" rows={2}></textarea>
                                                     </div>
                                                 );
                                             })}
@@ -852,8 +1191,12 @@
                                             <div className="flex justify-between items-center mb-4">
                                                 <h4 className="text-sm font-bold text-slate-800"><i className="fa-solid fa-robot text-purple-500 mr-2"></i>{t.ai_feature}</h4>
                                                 <div className="flex gap-2">
-                                                    <button onClick={aiAnalyzeBehavior} className="text-[10px] font-bold bg-white border border-slate-200 px-2 py-1 rounded hover:bg-purple-50 hover:text-purple-600 transition-colors">Analysis</button>
-                                                    <button onClick={aiSuggestIntervention} className="text-[10px] font-bold bg-white border border-slate-200 px-2 py-1 rounded hover:bg-purple-50 hover:text-purple-600 transition-colors">Intervention</button>
+                                                    <button onClick={aiAnalyzeBehavior} disabled={loadingState.node === 'analyze_btn'} className={`text-[10px] font-bold bg-white border border-slate-200 px-2 py-1 rounded hover:bg-purple-50 hover:text-purple-600 transition-colors ${loadingState.node === 'analyze_btn' ? 'opacity-50' : ''}`}>
+                                                        {loadingState.node === 'analyze_btn' ? <i className="fa-solid fa-circle-notch fa-spin mr-1"></i> : null} Analysis
+                                                    </button>
+                                                    <button onClick={aiSuggestIntervention} disabled={loadingState.node === 'intervention_btn'} className={`text-[10px] font-bold bg-white border border-slate-200 px-2 py-1 rounded hover:bg-purple-50 hover:text-purple-600 transition-colors ${loadingState.node === 'intervention_btn' ? 'opacity-50' : ''}`}>
+                                                        {loadingState.node === 'intervention_btn' ? <i className="fa-solid fa-circle-notch fa-spin mr-1"></i> : null} Intervention
+                                                    </button>
                                                 </div>
                                             </div>
                                             <div className="space-y-3">
