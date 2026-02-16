@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v2.6 - Angga Conni Saputra</title>
+    <title>ImpactArchitect v2.9 - Angga Conni Saputra</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -412,7 +412,7 @@
             }
         };
 
-        // --- COMPONENTS ---
+        // --- COMPONENTS (Moved outside App to prevent re-render crashes) ---
 
         const Toast = ({ message, onClose }) => (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[120] flex items-center gap-3 animate-slide-up border border-slate-700">
@@ -421,6 +421,12 @@
                 <button onClick={onClose} className="ml-2 text-slate-400 hover:text-white"><i className="fa-solid fa-times"></i></button>
             </div>
         );
+
+        const RiskTag = ({ level, t }) => {
+            const colors = { low: 'bg-emerald-100 text-emerald-700', medium: 'bg-yellow-100 text-yellow-700', high: 'bg-orange-100 text-orange-700', critical: 'bg-red-100 text-red-700' };
+            const label = t ? t[`risk_${level}`] : level;
+            return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${colors[level]}`}>{label}</span>;
+        };
 
         const RadarChart = ({ data, labels, onChartReady }) => {
             const chartRef = useRef(null);
@@ -608,7 +614,7 @@
             const [loadingState, setLoadingState] = useState({ global: false, node: null });
             const [chartImage, setChartImage] = useState(null);
 
-            const t = TRANSLATIONS[lang];
+            const t = TRANSLATIONS[lang] || TRANSLATIONS['en']; // Safety fallback
             const selectedNode = nodes.find(n => n.id === selectedNodeId);
             const nodeComb = (selectedNodeId && combData[selectedNodeId]) ? combData[selectedNodeId] : getInitialComb();
 
@@ -713,21 +719,18 @@
                 reader.readAsText(file);
             };
 
-            // --- AI INTEGRATION (SMART SWITCHER) ---
+            // --- AI INTEGRATION (Single Model with Retry) ---
             const callGemini = async (prompt, systemInstruction = "") => {
                 if (!apiKey) {
                     setShowArcadeModal(true);
                     return null;
                 }
                 
-                // USER REQUEST: Default to 2.5, Fallback to 1.5
-                const models = [
-                    'gemini-2.5-flash-preview-09-2025', // Latest (Smartest, but low free quota)
-                    'gemini-1.5-flash'                  // Stable (Unlimited Free Tier)
-                ];
+                // ONLY use the preview model as per system instructions
+                const model = 'gemini-2.5-flash-preview-09-2025';
+                const delays = [1000, 2000, 4000, 8000, 16000];
 
-                for (let i = 0; i < models.length; i++) {
-                    const model = models[i];
+                for (let attempt = 0; attempt <= delays.length; attempt++) {
                     try {
                         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
                             method: 'POST', 
@@ -739,34 +742,41 @@
                         });
 
                         if (!res.ok) {
-                            // If Resource Exhausted (429) or Not Found (404)
-                            if (res.status === 429 || res.status === 404 || res.status === 400) {
-                                console.warn(`Model ${model} failed (Status ${res.status})...`);
-                                
-                                // Show Toast Notification only if falling back
-                                if (i === 0 && models[i+1]) {
-                                    setToastMessage("⚠️ Quota 2.5 Habis. Beralih ke 1.5 (Unlimited/Free Tier)...");
-                                    setTimeout(() => setToastMessage(null), 5000);
+                            const status = res.status;
+                            
+                            // Retry only on 429 (Rate Limit) or 503 (Service Unavailable)
+                            if (status === 429 || status === 503) {
+                                if (attempt < delays.length) {
+                                    setToastMessage(`⏳ Server sibuk (Percobaan ${attempt + 1}/${delays.length}). Tunggu sebentar...`);
+                                    await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+                                    continue; 
                                 }
-                                
-                                continue; // Try next model
                             }
-                            // Other errors
+
                             const errText = await res.text();
-                            console.error("Gemini API Error:", errText);
+                            console.error(`Gemini API Error (${model}):`, errText);
+                            setToastMessage(`❌ Error ${status}: Cek API Key atau Kuota.`);
+                            setTimeout(() => setToastMessage(null), 5000);
                             return null;
                         }
 
                         const data = await res.json();
+                        if (attempt > 0) {
+                             setToastMessage("✅ Terhubung kembali!");
+                             setTimeout(() => setToastMessage(null), 2000);
+                        }
                         return data.candidates?.[0]?.content?.parts?.[0]?.text;
+
                     } catch (e) { 
-                        console.error(`Fetch error with ${model}:`, e);
-                        continue;
+                        console.error("Fetch error:", e);
+                        if (attempt < delays.length) {
+                             await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+                             continue;
+                        }
+                        setToastMessage("❌ Gagal koneksi internet.");
+                        return null;
                     }
                 }
-                
-                setToastMessage("❌ Semua Model AI Sibuk. Coba 1 menit lagi.");
-                setTimeout(() => setToastMessage(null), 5000);
                 return null;
             };
 
@@ -800,19 +810,25 @@
                 for (const node of nodes) {
                     if (!node.content || node.content.trim() === '') {
                         await aiFillNode(node.id, node.type, "");
-                        await new Promise(r => setTimeout(r, 1000)); 
+                        await new Promise(r => setTimeout(r, 2000)); // Increased delay for safety
                     }
                 }
                 setLoadingState({ global: false, node: null });
             };
 
             const aiMagicComb = async () => {
-                // IMPORTANT: Ensure selectedNode exists before calling
-                if (!selectedNodeId) return;
+                if (!selectedNodeId) {
+                    alert("Please select a node first.");
+                    return;
+                }
                 const targetNode = nodes.find(n => n.id === selectedNodeId);
-                if (!targetNode) return;
+                
+                if (!targetNode) {
+                    console.error("Node not found:", selectedNodeId);
+                    return;
+                }
 
-                setLoadingState({ global: true, node: 'magic_comb' }); // Specific loading ID
+                setLoadingState({ global: true, node: 'magic_comb' });
                 
                 const prompt = `Analyze: "${targetNode.content}". Estimate behavioral scores (1-10) for Capability, Opportunity, Motivation. Provide very short notes for each. Return valid JSON ONLY: { "c_score": 5, "c_note": "...", "o_score": 5, "o_note": "...", "m_score": 5, "m_note": "..." }`;
                 
@@ -824,7 +840,7 @@
                         setCombData(prev => ({
                             ...prev,
                             [selectedNodeId]: {
-                                ...prev[selectedNodeId],
+                                ...(prev[selectedNodeId] || getInitialComb()),
                                 capability: { score: json.c_score, notes: json.c_note },
                                 opportunity: { score: json.o_score, notes: json.o_note },
                                 motivation: { score: json.m_score, notes: json.m_note },
@@ -946,16 +962,14 @@
                 }
             };
 
-            const RiskTag = ({ level }) => {
-                const colors = { low: 'bg-emerald-100 text-emerald-700', medium: 'bg-yellow-100 text-yellow-700', high: 'bg-orange-100 text-orange-700', critical: 'bg-red-100 text-red-700' };
-                return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${colors[level]}`}>{t[`risk_${level}`]}</span>;
-            };
-
             // --- RENDER ---
             if (!mode) return (
                 <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white relative overflow-hidden">
                      <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
+                    
+                    {/* Language Button for Landing Page - Keep as is per user request */}
                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="absolute top-6 right-6 text-xs font-bold bg-slate-800 px-3 py-1 rounded border border-slate-700 hover:border-blue-500 z-10">{lang.toUpperCase()}</button>
+                    
                     <div className="max-w-4xl w-full z-10">
                         <div className="text-center mb-12">
                             <h1 className="text-6xl font-bold mb-4 tracking-tight flex justify-center items-center gap-4">
@@ -1049,9 +1063,11 @@
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
                             <div>
-                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">2.6</span></h1>
+                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">2.9</span></h1>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
+                                    {/* MOVED LANGUAGE BUTTON HERE */}
+                                    <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="text-[9px] font-bold bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-500 transition-colors">{lang.toUpperCase()}</button>
                                     <span className="text-[9px] text-slate-400 font-medium">by Angga Conni Saputra</span>
                                 </div>
                             </div>
@@ -1064,7 +1080,7 @@
                             <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-[10px] text-blue-500 hover:text-blue-700 font-medium ml-1 mt-1 block flex items-center gap-1"><i className="fa-solid fa-external-link-alt"></i> {t.get_api_key}</a>
                         </div>
                         <div className={`flex items-center gap-3 ${tourStep === 4 ? 'tour-highlight' : ''}`}>
-                             <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="px-3 py-1.5 text-xs font-bold border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">{lang.toUpperCase()}</button>
+                            {/* REMOVED LANGUAGE BUTTON FROM HERE */}
                             <button onClick={aiAutoCompleteAll} disabled={loadingState.global} className={`flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 ${loadingState.global ? 'opacity-70 cursor-wait' : ''}`}>
                                 {loadingState.global ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-wand-magic-sparkles text-purple-400"></i>}
                                 {t.btn_auto_complete}
@@ -1136,7 +1152,7 @@
                                                                             rows={4} 
                                                                         />
                                                                         <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
-                                                                            <RiskTag level={node.risk} />
+                                                                            <RiskTag level={node.risk} t={t} />
                                                                             <button onClick={(e) => deleteNode(node.id, e)} className="text-slate-300 hover:text-red-400 text-sm"><i className="fa-solid fa-trash"></i></button>
                                                                         </div>
                                                                     </div>
