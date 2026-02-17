@@ -18,8 +18,8 @@
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Chart.js for Radar Charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js for Radar Charts (PINNED VERSION UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -165,10 +165,13 @@
                 lbl_outcome: "Outcome (Hasil)",
                 lbl_output: "Output (Keluaran)",
                 lbl_activity: "Activity (Aktivitas)",
+                
+                // Fixed keys to match data (critical/medium)
                 risk_low: "Aman",
-                risk_med: "Sedang",
+                risk_medium: "Sedang", 
                 risk_high: "Tinggi",
-                risk_crit: "Kritis",
+                risk_critical: "Kritis",
+                
                 empty_state: "Mulai dengan menambahkan Impact",
                 manual_input_hint: "Geser slider atau klik 🪄 di atas untuk Auto-Diagnosa AI.",
                 ai_feature: "Bantuan AI",
@@ -182,6 +185,11 @@
                 opportunity: "Kesempatan",
                 motivation: "Motivasi",
                 
+                // Modal Texts
+                modal_api_desc: "Untuk membuka kekuatan AI, kamu butuh Gemini API Key (gratis!).",
+                modal_api_btn: "DAPATKAN KEY",
+                modal_api_later: "Nanti saja",
+
                 // Tour
                 tour_next: "Lanjut",
                 tour_skip: "Tutup Tutorial",
@@ -239,10 +247,13 @@
                 lbl_outcome: "Outcome",
                 lbl_output: "Output",
                 lbl_activity: "Activity",
+                
+                // Fixed keys
                 risk_low: "Safe",
-                risk_med: "Medium",
+                risk_medium: "Medium",
                 risk_high: "High",
-                risk_crit: "Critical",
+                risk_critical: "Critical",
+                
                 empty_state: "Start by adding an Impact node",
                 manual_input_hint: "Adjust sliders or click 🪄 above for AI Auto-Diagnosis.",
                 ai_feature: "AI Assist",
@@ -255,6 +266,11 @@
                 capability: "Capability",
                 opportunity: "Opportunity",
                 motivation: "Motivation",
+
+                // Modal Texts
+                modal_api_desc: "To unlock the magic powers of AI, you need a Gemini API Key. It's free!",
+                modal_api_btn: "GET KEY",
+                modal_api_later: "I'll enter it later",
 
                 // Tour
                 tour_next: "Next",
@@ -296,62 +312,23 @@
                 titleEN: 'Coffee Farmer Welfare Program - West Java',
                 titleID: 'Program Kesejahteraan Petani Kopi - Jawa Barat',
                 nodes: [
-                    { 
-                        id: '1', 
-                        type: 'impact', 
-                        content: 'Increase average household income of smallholder coffee farmers by 40% within 2 years',
-                        risk: 'low' 
-                    },
-                    { 
-                        id: '2', 
-                        type: 'outcome', 
-                        content: 'Farmers adopt wet-hulling fermentation technique and sell specialty-grade coffee to premium buyers',
-                        risk: 'high' 
-                    },
-                    { 
-                        id: '3', 
-                        type: 'output', 
-                        content: '200 farmers trained in wet-hulling fermentation and post-harvest processing',
-                        risk: 'low' 
-                    },
-                    { 
-                        id: '4', 
-                        type: 'activity', 
-                        content: 'Conduct 5-day hands-on workshop on fermentation tanks, pH monitoring, and quality control',
-                        risk: 'low' 
-                    }
+                    { id: '1', type: 'impact', content: 'Increase average household income of smallholder coffee farmers by 40% within 2 years', risk: 'low' },
+                    { id: '2', type: 'outcome', content: 'Farmers adopt wet-hulling fermentation technique and sell specialty-grade coffee to premium buyers', risk: 'high' },
+                    { id: '3', type: 'output', content: '200 farmers trained in wet-hulling fermentation and post-harvest processing', risk: 'low' },
+                    { id: '4', type: 'activity', content: 'Conduct 5-day hands-on workshop on fermentation tanks, pH monitoring, and quality control', risk: 'low' }
                 ],
                 combData: {
                     '2': {
-                        capability: { 
-                            score: 4, 
-                            notes: 'Farmers struggle with pH testing and timing - need constant monitoring every 6-8 hours' 
-                        },
-                        opportunity: { 
-                            score: 3, 
-                            notes: 'Most farmers lack fermentation tanks ($200 each). Water source inconsistent in dry season. Premium buyers require 5-ton minimum order.' 
-                        },
-                        motivation: { 
-                            score: 6, 
-                            notes: 'Initial interest high but risk-averse. Many saw neighbors fail with honey-process last year.' 
-                        },
+                        capability: { score: 4, notes: 'Farmers struggle with pH testing and timing - need constant monitoring every 6-8 hours' },
+                        opportunity: { score: 3, notes: 'Most farmers lack fermentation tanks ($200 each). Water source inconsistent in dry season. Premium buyers require 5-ton minimum order.' },
+                        motivation: { score: 6, notes: 'Initial interest high but risk-averse. Many saw neighbors fail with honey-process last year.' },
                         summary: 'The behavior "adopt wet-hulling technique" requires farmers to: (1) invest in equipment, (2) change daily routine for 72-hour monitoring, (3) trust unproven premium market',
                         intervention: 'Consider: (1) Equipment subsidy or cooperative bulk-purchase, (2) WhatsApp reminder system for monitoring times, (3) Guaranteed purchase contract from roasters to reduce market risk'
                     }
                 },
                 learningPoints: {
-                    en: [
-                        "Identify hidden capability barriers (technical skills vs equipment)",
-                        "Spot opportunity gaps (access to markets, infrastructure)",
-                        "Assess realistic motivation given past failures",
-                        "Revise activities to address COM-B gaps"
-                    ],
-                    id: [
-                        "Mengidentifikasi hambatan kemampuan tersembunyi (skill teknis vs peralatan)",
-                        "Menemukan gap kesempatan (akses pasar, infrastruktur)",
-                        "Menilai motivasi realistis mengingat kegagalan masa lalu",
-                        "Merevisi aktivitas untuk mengatasi gap COM-B"
-                    ]
+                    en: ["Identify hidden capability barriers", "Spot opportunity gaps", "Assess realistic motivation", "Revise activities"],
+                    id: ["Mengidentifikasi hambatan kemampuan", "Menemukan gap kesempatan", "Menilai motivasi realistis", "Merevisi aktivitas"]
                 }
             },
             scenario2: {
@@ -360,67 +337,28 @@
                 titleEN: 'Stunting Reduction Program - East Nusa Tenggara',
                 titleID: 'Program Reduksi Stunting - Nusa Tenggara Timur',
                 nodes: [
-                    { 
-                        id: '10', 
-                        type: 'impact', 
-                        content: 'Reduce stunting prevalence from 42% to 30% in target villages within 3 years',
-                        risk: 'low' 
-                    },
-                    { 
-                        id: '11', 
-                        type: 'outcome', 
-                        content: 'Mothers provide protein-rich complementary food (eggs, fish, tempe) to children 6-24 months daily',
-                        risk: 'critical' 
-                    },
-                    { 
-                        id: '12', 
-                        type: 'output', 
-                        content: '500 sachets of micronutrient powder distributed monthly to 150 mothers through posyandu',
-                        risk: 'low' 
-                    },
-                    { 
-                        id: '13', 
-                        type: 'activity', 
-                        content: 'Monthly posyandu sessions with nutrition counseling and sachet distribution',
-                        risk: 'low' 
-                    }
+                    { id: '10', type: 'impact', content: 'Reduce stunting prevalence from 42% to 30% in target villages within 3 years', risk: 'low' },
+                    { id: '11', type: 'outcome', content: 'Mothers provide protein-rich complementary food (eggs, fish, tempe) to children 6-24 months daily', risk: 'critical' },
+                    { id: '12', type: 'output', content: '500 sachets of micronutrient powder distributed monthly to 150 mothers through posyandu', risk: 'low' },
+                    { id: '13', type: 'activity', content: 'Monthly posyandu sessions with nutrition counseling and sachet distribution', risk: 'low' }
                 ],
                 combData: {
                     '11': {
-                        capability: { 
-                            score: 4, 
-                            notes: 'Mothers know eggs are good but lack knowledge on preparation for 6-9 month olds (texture, avoiding choking). Traditional porridge recipes don\'t include protein sources.' 
-                        },
-                        opportunity: { 
-                            score: 2, 
-                            notes: 'Eggs cost Rp2,000 each - unaffordable for daily use (household income Rp30k/day). Fish spoils quickly with no refrigeration. Tempe only available on market day (3x/week).' 
-                        },
-                        motivation: { 
-                            score: 3, 
-                            notes: 'Grandmothers believe babies only need breastmilk until teeth appear. Cultural taboo: fish causes worms, eggs cause allergies. Mothers fear social judgment if not following elders.' 
-                        },
-                        summary: 'Target behavior requires: (1) daily purchase mothers cannot afford, (2) defying mother-in-law authority, (3) preparing food using unknown technique. Output (powder distribution) does not address any of these root barriers.',
-                        intervention: 'CRITICAL REVISION NEEDED: (1) Switch to affordable protein (local beans, fish farming), (2) Engage grandmothers in counseling, (3) Cooking demonstrations with age-appropriate recipes, (4) Consider conditional cash transfer or subsidized eggs'
+                        capability: { score: 4, notes: 'Mothers know eggs are good but lack knowledge.' },
+                        opportunity: { score: 2, notes: 'Eggs cost Rp2,000 each - unaffordable for daily use.' },
+                        motivation: { score: 3, notes: 'Grandmothers believe babies only need breastmilk until teeth appear.' },
+                        summary: 'Target behavior requires: (1) daily purchase mothers cannot afford, (2) defying mother-in-law authority. Output does not address root barriers.',
+                        intervention: 'CRITICAL REVISION NEEDED: Switch to affordable protein (local beans, fish farming), engage grandmothers.'
                     }
                 },
                 learningPoints: {
-                    en: [
-                        "Diagnose the output-outcome gap (distribution ≠ behavior change)",
-                        "Identify economic barriers hidden in 'knowledge' programs",
-                        "Recognize social/cultural constraints on mother's autonomy",
-                        "Redesign intervention based on COM-B diagnosis"
-                    ],
-                    id: [
-                        "Mendiagnosis gap output-outcome (distribusi ≠ perubahan perilaku)",
-                        "Mengidentifikasi hambatan ekonomi tersembunyi di program 'edukasi'",
-                        "Mengenali kendala sosial/budaya pada otonomi ibu",
-                        "Merancang ulang intervensi berdasarkan diagnosis COM-B"
-                    ]
+                    en: ["Diagnose the output-outcome gap", "Identify economic barriers", "Recognize social/cultural constraints", "Redesign intervention"],
+                    id: ["Mendiagnosis gap output-outcome", "Mengidentifikasi hambatan ekonomi", "Mengenali kendala sosial/budaya", "Merancang ulang intervensi"]
                 }
             }
         };
 
-        // --- COMPONENTS (Moved outside App to prevent re-render crashes) ---
+        // --- COMPONENTS ---
 
         const Toast = ({ message, onClose }) => (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[120] flex items-center gap-3 animate-slide-up border border-slate-700">
@@ -431,9 +369,17 @@
         );
 
         const RiskTag = ({ level, t }) => {
-            const colors = { low: 'bg-emerald-100 text-emerald-700', medium: 'bg-yellow-100 text-yellow-700', high: 'bg-orange-100 text-orange-700', critical: 'bg-red-100 text-red-700' };
-            const label = t ? t[`risk_${level}`] : level;
-            return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${colors[level]}`}>{label}</span>;
+            // Mapping colors to level keys (low, medium, high, critical)
+            const colors = { 
+                low: 'bg-emerald-100 text-emerald-700', 
+                medium: 'bg-yellow-100 text-yellow-700', 
+                high: 'bg-orange-100 text-orange-700', 
+                critical: 'bg-red-100 text-red-700' 
+            };
+            // Fallback to English key or original level if t is missing
+            const labelKey = `risk_${level}`;
+            const label = (t && t[labelKey]) ? t[labelKey] : level;
+            return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${colors[level] || 'bg-slate-100 text-slate-700'}`}>{label}</span>;
         };
 
         const RadarChart = ({ data, labels, onChartReady }) => {
@@ -443,53 +389,61 @@
             useEffect(() => {
                 if (canvasRef.current) {
                     if (chartRef.current) chartRef.current.destroy();
-                    const ctx = canvasRef.current.getContext('2d');
                     
-                    const scores = [
-                        data?.capability?.score || 0, 
-                        data?.opportunity?.score || 0, 
-                        data?.motivation?.score || 0
-                    ];
+                    // Defensive check for Chart.js
+                    if (typeof Chart === 'undefined') {
+                        console.error("Chart.js not loaded");
+                        return;
+                    }
 
-                    chartRef.current = new Chart(ctx, {
-                        type: 'radar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Behavioral Strength',
-                                data: scores,
-                                backgroundColor: 'rgba(14, 165, 233, 0.2)',
-                                borderColor: '#0ea5e9',
-                                borderWidth: 2,
-                                pointBackgroundColor: '#0ea5e9',
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                r: {
-                                    angleLines: { color: '#e2e8f0' },
-                                    grid: { color: '#e2e8f0' },
-                                    suggestedMin: 0,
-                                    suggestedMax: 10,
-                                    ticks: { display: false }
-                                }
+                    try {
+                        const ctx = canvasRef.current.getContext('2d');
+                        const scores = [
+                            data?.capability?.score || 0, 
+                            data?.opportunity?.score || 0, 
+                            data?.motivation?.score || 0
+                        ];
+
+                        chartRef.current = new Chart(ctx, {
+                            type: 'radar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Behavioral Strength',
+                                    data: scores,
+                                    backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                                    borderColor: '#0ea5e9',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: '#0ea5e9',
+                                }]
                             },
-                            plugins: { legend: { display: false } },
-                            animation: {
-                                onComplete: () => {
-                                    if(onChartReady && chartRef.current && chartRef.current.canvas) {
-                                        try {
-                                            onChartReady(chartRef.current.toBase64Image());
-                                        } catch(e) {
-                                            console.warn("Chart export failed", e);
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    r: {
+                                        angleLines: { color: '#e2e8f0' },
+                                        grid: { color: '#e2e8f0' },
+                                        suggestedMin: 0,
+                                        suggestedMax: 10,
+                                        ticks: { display: false }
+                                    }
+                                },
+                                plugins: { legend: { display: false } },
+                                animation: {
+                                    onComplete: () => {
+                                        if(onChartReady && chartRef.current && chartRef.current.canvas) {
+                                            try {
+                                                onChartReady(chartRef.current.toBase64Image());
+                                            } catch(e) { console.warn("Chart export failed", e); }
                                         }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    } catch (e) {
+                        console.error("Chart creation failed", e);
+                    }
                 }
                 return () => { if (chartRef.current) chartRef.current.destroy(); };
             }, [data, labels]);
@@ -534,17 +488,13 @@
                     <div className="text-amber-400 text-4xl mb-6 animate-bounce-slow">
                         <i className="fa-solid fa-gamepad"></i>
                     </div>
-                    <h2 className="text-white text-xl mb-4 leading-loose tracking-wider arcade-text">PLEASE INSERT<br/><span className="text-amber-400">API KEY</span></h2>
-                    <p className="text-slate-400 text-xs font-sans mb-8 leading-relaxed">
-                        To unlock the magic powers of AI, you need a Gemini Coin (API Key). It's free!
-                    </p>
+                    <h2 className="text-white text-xl mb-4 leading-loose tracking-wider arcade-text">{t.api_disconnected}</h2>
+                    <p className="text-slate-400 text-xs font-sans mb-8 leading-relaxed">{t.modal_api_desc}</p>
                     <div className="flex flex-col gap-3">
                         <a href="https://aistudio.google.com/app/apikey" target="_blank" className="bg-amber-500 hover:bg-amber-400 text-black py-3 px-6 rounded text-xs font-bold transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-none uppercase">
-                            GET KEY <i className="fa-solid fa-external-link-alt ml-2"></i>
+                            {t.modal_api_btn} <i className="fa-solid fa-external-link-alt ml-2"></i>
                         </a>
-                        <button onClick={onClose} className="text-slate-500 hover:text-white text-xs mt-2 font-sans underline">
-                            I'll enter it later
-                        </button>
+                        <button onClick={onClose} className="text-slate-500 hover:text-white text-xs mt-2 font-sans underline">{t.modal_api_later}</button>
                     </div>
                 </div>
             </div>
@@ -567,22 +517,12 @@
             return (
                 <div className="bg-white rounded-xl border border-slate-200 p-6 hover:border-blue-400 hover:shadow-lg transition-all group">
                     <div className="flex items-start justify-between mb-4">
-                        <h3 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
-                            {t[scenarioKey + 'title']}
-                        </h3>
-                        <span className={`text-xs font-bold px-3 py-1 rounded-full border ${difficultyColors[difficulty]}`}>
-                            {difficulty}
-                        </span>
+                        <h3 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{t[scenarioKey + 'title']}</h3>
+                        <span className={`text-xs font-bold px-3 py-1 rounded-full border ${difficultyColors[difficulty]}`}>{difficulty}</span>
                     </div>
-                    
-                    <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                        {t[scenarioKey + 'desc']}
-                    </p>
-
+                    <p className="text-sm text-slate-600 mb-4 leading-relaxed">{t[scenarioKey + 'desc']}</p>
                     <div className="border-t border-slate-100 pt-4 mb-4">
-                        <p className="text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">
-                            {t.tut_what_learn}
-                        </p>
+                        <p className="text-xs font-bold text-slate-700 mb-2 uppercase tracking-wide">{t.tut_what_learn}</p>
                         <ul className="space-y-1.5">
                             {learningPoints.map((point, idx) => (
                                 <li key={idx} className="text-xs text-slate-600 flex items-start gap-2">
@@ -592,13 +532,8 @@
                             ))}
                         </ul>
                     </div>
-
-                    <button 
-                        onClick={() => onStart(scenario)}
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 group-hover:scale-105"
-                    >
-                        <i className="fa-solid fa-play"></i>
-                        {t.tut_start}
+                    <button onClick={() => onStart(scenario)} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 group-hover:scale-105">
+                        <i className="fa-solid fa-play"></i> {t.tut_start}
                     </button>
                 </div>
             );
@@ -622,11 +557,10 @@
             const [loadingState, setLoadingState] = useState({ global: false, node: null });
             const [chartImage, setChartImage] = useState(null);
 
-            const t = TRANSLATIONS[lang] || TRANSLATIONS['en']; // Safety fallback
+            const t = TRANSLATIONS[lang] || TRANSLATIONS['en']; 
             const selectedNode = nodes.find(n => n.id === selectedNodeId);
             const nodeComb = (selectedNodeId && combData[selectedNodeId]) ? combData[selectedNodeId] : getInitialComb();
 
-            // --- INITIALIZATION ---
             const startSession = (sessionMode, isTut, initialData = [], title = "", initialCombData = {}) => {
                 setMode(sessionMode);
                 setIsTutorial(isTut);
@@ -648,7 +582,6 @@
                 startSession(scenario.mode, true, scenario.nodes, title, scenario.combData);
             };
 
-            // --- CORE LOGIC ---
             const handleNodeClick = (id) => {
                 setSelectedNodeId(id);
                 if (!combData[id]) setCombData(prev => ({ ...prev, [id]: getInitialComb() }));
@@ -697,7 +630,6 @@
                 });
             };
 
-            // --- SAVE / LOAD ---
             const saveProject = () => {
                 const data = { nodes, combData, mode, lang, projectTitle };
                 const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
@@ -721,25 +653,26 @@
                         if(data.combData) setCombData(data.combData);
                         if(data.mode) setMode(data.mode);
                         if(data.projectTitle) setProjectTitle(data.projectTitle);
-                        // If user is on landing page, ensure we switch to mode if defined, or default to design
+                        if (data.lang) setLang(data.lang);
+
                         if(!mode && data.mode) setMode(data.mode);
                         if(!mode && !data.mode) setMode('design');
                         
-                        alert("Project loaded!");
+                        setToastMessage("✅ Project loaded!");
+                        setTimeout(() => setToastMessage(null), 2500);
                     } catch(err) { alert("Invalid file"); }
                 };
                 reader.readAsText(file);
             };
 
-            // --- AI INTEGRATION (Single Model with Retry) ---
+            // AI INTEGRATION
             const callGemini = async (prompt, systemInstruction = "") => {
                 if (!apiKey) {
                     setShowArcadeModal(true);
                     return null;
                 }
                 
-                // ONLY use the preview model as per system instructions
-                const model = 'gemini-2.5-flash-preview-09-2025';
+                const model = 'gemini-2.5-flash';
                 const delays = [1000, 2000, 4000, 8000, 16000];
 
                 for (let attempt = 0; attempt <= delays.length; attempt++) {
@@ -755,8 +688,6 @@
 
                         if (!res.ok) {
                             const status = res.status;
-                            
-                            // Retry only on 429 (Rate Limit) or 503 (Service Unavailable)
                             if (status === 429 || status === 503) {
                                 if (attempt < delays.length) {
                                     setToastMessage(`⏳ Server sibuk (Percobaan ${attempt + 1}/${delays.length}). Tunggu sebentar...`);
@@ -764,7 +695,6 @@
                                     continue; 
                                 }
                             }
-
                             const errText = await res.text();
                             console.error(`Gemini API Error (${model}):`, errText);
                             setToastMessage(`❌ Error ${status}: Cek API Key atau Kuota.`);
@@ -819,13 +749,15 @@
 
             const aiAutoCompleteAll = async () => {
                 setLoadingState({ global: true, node: null });
+                setToastMessage(`🔄 Mengisi node ${nodes.filter(n => !n.content.trim()).length} yang kosong...`);
                 for (const node of nodes) {
                     if (!node.content || node.content.trim() === '') {
                         await aiFillNode(node.id, node.type, "");
-                        await new Promise(r => setTimeout(r, 2000)); // Increased delay for safety
+                        await new Promise(r => setTimeout(r, 2000));
                     }
                 }
                 setLoadingState({ global: false, node: null });
+                setToastMessage(null);
             };
 
             const aiMagicComb = async () => {
@@ -979,7 +911,6 @@
                 <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white relative overflow-hidden">
                      <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '30px 30px'}}></div>
                     
-                    {/* Language Button for Landing Page - Keep as is per user request */}
                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="absolute top-6 right-6 text-xs font-bold bg-slate-800 px-3 py-1 rounded border border-slate-700 hover:border-blue-500 z-10">{lang.toUpperCase()}</button>
                     
                     <div className="max-w-6xl w-full z-10">
@@ -990,7 +921,6 @@
                             <p className="text-slate-400 text-xl font-light">Behaviorally-Informed Policy IDE</p>
                         </div>
                         
-                        {/* UPDATED MENU LAYOUT - 3 COLUMNS */}
                         <div className="grid md:grid-cols-3 gap-6">
                             {/* Card 1: New Program */}
                             <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
@@ -1010,7 +940,7 @@
                                 <p className="text-sm text-slate-400 leading-relaxed">{t.lp_tut_desc}</p>
                             </button>
 
-                            {/* Card 3: Import (New Feature) */}
+                            {/* Card 3: Import */}
                             <label className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-purple-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden cursor-pointer">
                                 <input type="file" accept=".json" onChange={loadProject} className="hidden" />
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-purple-500/20"></div>
@@ -1023,13 +953,11 @@
                             </label>
                         </div>
 
-                        {/* NAME FOOTER */}
                         <div className="mt-16 text-center text-slate-600 text-sm">
                             <p>Created by <span className="text-slate-400 font-bold">Angga Conni Saputra</span></p>
                         </div>
                     </div>
                     
-                    {/* TUTORIAL MODAL */}
                     {showTutorialModal && (
                         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
                             <div className="bg-white text-slate-900 rounded-2xl p-8 max-w-4xl w-full my-8 animate-fade-in shadow-2xl">
@@ -1045,30 +973,19 @@
                                                 : 'Practice auditing & revising ToC using pre-populated real-world data'}
                                         </p>
                                     </div>
-                                    <button 
-                                        onClick={() => setShowTutorialModal(false)} 
-                                        className="text-slate-400 hover:text-slate-600 text-2xl w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
-                                    >
+                                    <button onClick={() => setShowTutorialModal(false)} className="text-slate-400 hover:text-slate-600 text-2xl w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
                                         <i className="fa-solid fa-times"></i>
                                     </button>
                                 </div>
                                 
                                 <div className="grid md:grid-cols-2 gap-6">
                                     {Object.values(TUTORIAL_SCENARIOS).map(scenario => (
-                                        <TutorialCard 
-                                            key={scenario.id} 
-                                            scenario={scenario} 
-                                            lang={lang}
-                                            onStart={startTutorialScenario}
-                                        />
+                                        <TutorialCard key={scenario.id} scenario={scenario} lang={lang} onStart={startTutorialScenario} />
                                     ))}
                                 </div>
 
                                 <div className="mt-6 pt-6 border-t border-slate-200">
-                                    <button 
-                                        onClick={() => setShowTutorialModal(false)} 
-                                        className="w-full py-3 text-sm font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors"
-                                    >
+                                    <button onClick={() => setShowTutorialModal(false)} className="w-full py-3 text-sm font-bold text-slate-600 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors">
                                         <i className="fa-solid fa-arrow-left mr-2"></i>
                                         {t.tut_back}
                                     </button>
@@ -1092,7 +1009,6 @@
                                 <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.0</span></h1>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
-                                    {/* MOVED LANGUAGE BUTTON HERE */}
                                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="text-[9px] font-bold bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-500 transition-colors">{lang.toUpperCase()}</button>
                                     <span className="text-[9px] text-slate-400 font-medium">by Angga Conni Saputra</span>
                                 </div>
@@ -1106,7 +1022,6 @@
                             <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-[10px] text-blue-500 hover:text-blue-700 font-medium ml-1 mt-1 block flex items-center gap-1"><i className="fa-solid fa-external-link-alt"></i> {t.get_api_key}</a>
                         </div>
                         <div className={`flex items-center gap-3 ${tourStep === 4 ? 'tour-highlight' : ''}`}>
-                            {/* REMOVED LANGUAGE BUTTON FROM HERE */}
                             <button onClick={aiAutoCompleteAll} disabled={loadingState.global} className={`flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 ${loadingState.global ? 'opacity-70 cursor-wait' : ''}`}>
                                 {loadingState.global ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-wand-magic-sparkles text-purple-400"></i>}
                                 {t.btn_auto_complete}
@@ -1126,7 +1041,8 @@
                                 {Object.keys(NODE_TYPES).map(type => (
                                     <button key={type} onClick={() => addNode(type)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 border ${NODE_TYPES[type].bg} ${NODE_TYPES[type].border}`}>
                                         <i className={`fa-solid ${NODE_TYPES[type].icon} opacity-60`}></i>
-                                        {t[NODE_TYPES[type].key].split(' ')[0]} <span className="ml-1 opacity-50">+</span>
+                                        {/* Defensive check for translation */}
+                                        {(t[NODE_TYPES[type].key] || '').split(' ')[0]} <span className="ml-1 opacity-50">+</span>
                                     </button>
                                 ))}
                             </div>
@@ -1159,7 +1075,7 @@
                                                         </span>
                                                         <div className={`h-px w-12 bg-slate-300 ml-3`}></div>
                                                     </div>
-                                                    {/* UPDATED: Vertical Layout Stack */}
+                                                    {/* Vertical Layout Stack */}
                                                     <div className="flex flex-col items-center gap-4 w-full">
                                                         {layerNodes.map(node => (
                                                             <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full max-w-3xl ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
