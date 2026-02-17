@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v2.9 - Angga Conni Saputra</title>
+    <title>ImpactArchitect v3.0 - Angga Conni Saputra</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -125,14 +125,18 @@
         const TRANSLATIONS = {
             id: {
                 // Landing Page
-                lp_new_title: "Mulai Program Baru",
+                lp_new_title: "Mulai Baru",
                 lp_new_subtitle: "Desain & Diagnosis",
-                lp_new_desc: "Kanvas kosong untuk merancang ToC baru atau mendiagnosis program yang gagal. Termasuk fitur analisis COM-B lengkap.",
+                lp_new_desc: "Kanvas kosong untuk merancang ToC baru atau mendiagnosis program.",
                 
-                lp_tut_title: "Tutorial & Sandbox",
-                lp_tut_subtitle: "Belajar & Eksperimen",
-                lp_tut_desc: "Gunakan data dummy untuk latihan analisis, edit, simpan, dan export. Panduan langkah demi langkah tersedia di sini.",
+                lp_tut_title: "Tutorial",
+                lp_tut_subtitle: "Belajar & Contoh",
+                lp_tut_desc: "Gunakan data dummy untuk latihan analisis.",
                 
+                lp_import_title: "Buka Project",
+                lp_import_subtitle: "Lanjut dari File",
+                lp_import_desc: "Import file JSON yang tersimpan sebelumnya.",
+
                 lp_modal_title: "Pilih Skenario Tutorial",
                 
                 // Tutorial Scenarios
@@ -195,13 +199,17 @@
             },
             en: {
                 // Landing Page
-                lp_new_title: "Start New Program",
+                lp_new_title: "New Program",
                 lp_new_subtitle: "Design & Diagnose",
-                lp_new_desc: "Blank canvas to design a new ToC or diagnose a failed program. Includes full COM-B analysis features.",
+                lp_new_desc: "Blank canvas to design a new ToC or diagnose a failed program.",
                 
-                lp_tut_title: "Tutorial & Sandbox",
-                lp_tut_subtitle: "Learn & Experiment",
-                lp_tut_desc: "Use dummy data to practice analysis, editing, saving, and exporting. Step-by-step guide included.",
+                lp_tut_title: "Tutorial",
+                lp_tut_subtitle: "Learn & Sandbox",
+                lp_tut_desc: "Use dummy data to practice analysis features.",
+
+                lp_import_title: "Open Project",
+                lp_import_subtitle: "Import File",
+                lp_import_desc: "Continue working from a previously saved .json file.",
                 
                 lp_modal_title: "Select Tutorial Scenario",
 
@@ -713,6 +721,10 @@
                         if(data.combData) setCombData(data.combData);
                         if(data.mode) setMode(data.mode);
                         if(data.projectTitle) setProjectTitle(data.projectTitle);
+                        // If user is on landing page, ensure we switch to mode if defined, or default to design
+                        if(!mode && data.mode) setMode(data.mode);
+                        if(!mode && !data.mode) setMode('design');
+                        
                         alert("Project loaded!");
                     } catch(err) { alert("Invalid file"); }
                 };
@@ -970,7 +982,7 @@
                     {/* Language Button for Landing Page - Keep as is per user request */}
                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="absolute top-6 right-6 text-xs font-bold bg-slate-800 px-3 py-1 rounded border border-slate-700 hover:border-blue-500 z-10">{lang.toUpperCase()}</button>
                     
-                    <div className="max-w-4xl w-full z-10">
+                    <div className="max-w-6xl w-full z-10">
                         <div className="text-center mb-12">
                             <h1 className="text-6xl font-bold mb-4 tracking-tight flex justify-center items-center gap-4">
                                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">ImpactArchitect</span>
@@ -978,9 +990,10 @@
                             <p className="text-slate-400 text-xl font-light">Behaviorally-Informed Policy IDE</p>
                         </div>
                         
-                        {/* UPDATED MENU LAYOUT - 2 COLUMNS */}
-                        <div className="grid md:grid-cols-2 gap-8">
-                            <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-10 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                        {/* UPDATED MENU LAYOUT - 3 COLUMNS */}
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {/* Card 1: New Program */}
+                            <button onClick={() => startSession('design', false, [], "New Program Strategy")} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-blue-500/20"></div>
                                 <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30"><i className="fa-solid fa-layer-group text-2xl text-blue-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_new_title}</h2>
@@ -988,13 +1001,26 @@
                                 <p className="text-sm text-slate-400 leading-relaxed">{t.lp_new_desc}</p>
                             </button>
 
-                            <button onClick={() => setShowTutorialModal(true)} className="group bg-slate-800/80 backdrop-blur p-10 rounded-2xl border border-slate-700 hover:border-amber-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
+                            {/* Card 2: Tutorial */}
+                            <button onClick={() => setShowTutorialModal(true)} className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-amber-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-amber-500/20"></div>
                                 <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center mb-6 border border-amber-500/30"><i className="fa-solid fa-graduation-cap text-2xl text-amber-400"></i></div>
                                 <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_tut_title}</h2>
                                 <span className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">{t.lp_tut_subtitle}</span>
                                 <p className="text-sm text-slate-400 leading-relaxed">{t.lp_tut_desc}</p>
                             </button>
+
+                            {/* Card 3: Import (New Feature) */}
+                            <label className="group bg-slate-800/80 backdrop-blur p-8 rounded-2xl border border-slate-700 hover:border-purple-500 transition-all hover:-translate-y-2 text-left h-full flex flex-col relative overflow-hidden cursor-pointer">
+                                <input type="file" accept=".json" onChange={loadProject} className="hidden" />
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-bl-full -mr-4 -mt-4 transition-all group-hover:bg-purple-500/20"></div>
+                                <div className="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30">
+                                    <i className="fa-solid fa-folder-open text-2xl text-purple-400"></i>
+                                </div>
+                                <h2 className="text-2xl font-bold mb-1 text-white">{t.lp_import_title}</h2>
+                                <span className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-3">{t.lp_import_subtitle}</span>
+                                <p className="text-sm text-slate-400 leading-relaxed">{t.lp_import_desc}</p>
+                            </label>
                         </div>
 
                         {/* NAME FOOTER */}
@@ -1063,7 +1089,7 @@
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
                             <div>
-                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">2.9</span></h1>
+                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.0</span></h1>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
                                     {/* MOVED LANGUAGE BUTTON HERE */}
