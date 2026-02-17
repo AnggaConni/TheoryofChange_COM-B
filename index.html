@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v3.1 - Angga Conni Saputra</title>
+    <title>ImpactArchitect v3.2 - Angga Conni Saputra</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -161,10 +161,13 @@
                 placeholder_node: "Ketik isi atau klik 🪄 untuk AI...",
                 placeholder_api: "Masukkan API Key Gemini...",
                 placeholder_project: "Judul Project...",
+                
+                // LABELS (UPDATED with INPUT)
                 lbl_impact: "Impact (Dampak)",
                 lbl_outcome: "Outcome (Hasil)",
                 lbl_output: "Output (Keluaran)",
                 lbl_activity: "Activity (Aktivitas)",
+                lbl_input: "Input (Masukan)",
                 
                 // Fixed keys to match data (critical/medium)
                 risk_low: "Aman",
@@ -236,17 +239,20 @@
                 mode_label: "Workspace",
                 toc_title: "Theory of Change Canvas",
                 comb_title: "Behavioral Analysis (COM-B)",
-                btn_auto_complete: "Auto-Complete (AI)",
+                btn_auto_complete: "Auto-Complete All (AI)",
                 btn_detect: "Detect Behavior",
                 btn_intervention: "Suggest Intervention",
                 btn_export: "Export Report",
                 placeholder_node: "Type here or click 🪄 for AI...",
                 placeholder_api: "Enter Gemini API Key...",
                 placeholder_project: "Project Name...",
+                
+                // LABELS (UPDATED)
                 lbl_impact: "Impact",
                 lbl_outcome: "Outcome",
                 lbl_output: "Output",
                 lbl_activity: "Activity",
+                lbl_input: "Input",
                 
                 // Fixed keys
                 risk_low: "Safe",
@@ -289,11 +295,13 @@
             }
         };
 
+        // --- UPDATED NODE TYPES (ADDED INPUT) ---
         const NODE_TYPES = {
             impact: { key: 'lbl_impact', color: 'from-emerald-400 to-teal-500', icon: 'fa-bullseye', bg: 'bg-emerald-50', border: 'border-emerald-200' },
             outcome: { key: 'lbl_outcome', color: 'from-blue-400 to-indigo-500', icon: 'fa-users', bg: 'bg-blue-50', border: 'border-blue-200' },
             output: { key: 'lbl_output', color: 'from-amber-400 to-orange-500', icon: 'fa-box-open', bg: 'bg-amber-50', border: 'border-amber-200' },
             activity: { key: 'lbl_activity', color: 'from-slate-400 to-slate-500', icon: 'fa-person-digging', bg: 'bg-slate-50', border: 'border-slate-200' },
+            input: { key: 'lbl_input', color: 'from-purple-400 to-violet-500', icon: 'fa-cubes', bg: 'bg-purple-50', border: 'border-purple-200' },
         };
 
         const getInitialComb = () => ({
@@ -903,6 +911,21 @@
 
                 const w = window.open('', '_blank');
                 
+                // --- EXPORT DIAGRAM GENERATION (Updated to respect flow) ---
+                const layers = ['impact', 'outcome', 'output', 'activity', 'input'];
+                const sortedDiagramHtml = layers.map((layer, index) => {
+                   const layerNodes = nodes.filter(n => n.type === layer);
+                   if (layerNodes.length === 0) return '';
+                   
+                   return layerNodes.map(n => `
+                        <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
+                            <span class="badge" style="color: ${layer === 'input' ? '#7c3aed' : ''}">${n.type}</span>
+                            <strong>${n.content}</strong>
+                        </div>
+                   `).join('') + (index < layers.length - 1 && layerNodes.length > 0 ? '<div class="arrow">↓</div>' : '');
+                }).join('');
+
+
                 const html = `
                     <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -945,13 +968,7 @@
                     
                     <h2>1. Diagram Alur (Theory of Change)</h2>
                     <div class="diagram-container">
-                        ${nodes.map((n, i) => `
-                            <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
-                                <span class="badge">${n.type}</span>
-                                <strong>${n.content}</strong>
-                            </div>
-                            ${i < nodes.length - 1 ? '<div class="arrow">↓</div>' : ''}
-                        `).join('')}
+                        ${sortedDiagramHtml}
                     </div>
 
                     <h2>2. Strategic Analysis (Executive Summary)</h2>
@@ -988,7 +1005,7 @@
                     }).join('')}
                     
                     <div class="footer">
-                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.1
+                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.2
                     </div>
                     <script>window.print()<\/script></body></html>
                 `;
@@ -1110,7 +1127,7 @@
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
                             <div>
-                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.1</span></h1>
+                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.2</span></h1>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
                                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="text-[9px] font-bold bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-500 transition-colors">{lang.toUpperCase()}</button>
@@ -1167,7 +1184,8 @@
                                             <p className="text-slate-500 font-medium">{t.empty_state}</p>
                                         </div>
                                     ) : (
-                                        ['impact', 'outcome', 'output', 'activity'].map(layer => {
+                                        // UPDATED RENDER LOOP TO INCLUDE 'input' and ORDER CORRECTLY
+                                        ['impact', 'outcome', 'output', 'activity', 'input'].map(layer => {
                                             const layerNodes = nodes.filter(n => n.type === layer);
                                             if (layerNodes.length === 0) return null;
                                             return (
