@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v3.0 - Angga Conni Saputra</title>
+    <title>ImpactArchitect v3.1 - Angga Conni Saputra</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -368,15 +368,25 @@
             </div>
         );
 
+        const LoadingOverlay = ({ status }) => (
+            <div className="fixed inset-0 z-[200] bg-white/90 backdrop-blur-md flex flex-col items-center justify-center animate-fade-in">
+                <div className="relative mb-8">
+                    <div className="w-20 h-20 border-4 border-slate-100 rounded-full"></div>
+                    <div className="w-20 h-20 border-4 border-blue-500 rounded-full border-t-transparent animate-spin absolute top-0 left-0"></div>
+                    <i className="fa-solid fa-wand-magic-sparkles text-2xl text-blue-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse"></i>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Generating Report</h3>
+                <p className="text-slate-500 text-sm animate-pulse">{status || "Analyzing logic flow..."}</p>
+            </div>
+        );
+
         const RiskTag = ({ level, t }) => {
-            // Mapping colors to level keys (low, medium, high, critical)
             const colors = { 
                 low: 'bg-emerald-100 text-emerald-700', 
                 medium: 'bg-yellow-100 text-yellow-700', 
                 high: 'bg-orange-100 text-orange-700', 
                 critical: 'bg-red-100 text-red-700' 
             };
-            // Fallback to English key or original level if t is missing
             const labelKey = `risk_${level}`;
             const label = (t && t[labelKey]) ? t[labelKey] : level;
             return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${colors[level] || 'bg-slate-100 text-slate-700'}`}>{label}</span>;
@@ -389,12 +399,7 @@
             useEffect(() => {
                 if (canvasRef.current) {
                     if (chartRef.current) chartRef.current.destroy();
-                    
-                    // Defensive check for Chart.js
-                    if (typeof Chart === 'undefined') {
-                        console.error("Chart.js not loaded");
-                        return;
-                    }
+                    if (typeof Chart === 'undefined') return;
 
                     try {
                         const ctx = canvasRef.current.getContext('2d');
@@ -503,14 +508,12 @@
         const TutorialCard = ({ scenario, lang, onStart }) => {
             const t = TRANSLATIONS[lang];
             const learningPoints = scenario.learningPoints[lang];
-            
             const difficultyColors = {
                 'Beginner': 'bg-green-100 text-green-700 border-green-200',
                 'Pemula': 'bg-green-100 text-green-700 border-green-200',
                 'Intermediate': 'bg-yellow-100 text-yellow-700 border-yellow-200',
                 'Menengah': 'bg-yellow-100 text-yellow-700 border-yellow-200',
             };
-
             const scenarioKey = `tut_scenario${scenario.id.slice(-1)}_`;
             const difficulty = t[scenarioKey + 'difficulty'];
 
@@ -554,8 +557,11 @@
             const [selectedNodeId, setSelectedNodeId] = useState(null);
             const [combData, setCombData] = useState({});
             const [apiKey, setApiKey] = useState('');
-            const [loadingState, setLoadingState] = useState({ global: false, node: null });
+            const [loadingState, setLoadingState] = useState({ global: false, node: null, status: '' });
             const [chartImage, setChartImage] = useState(null);
+            
+            // Hidden Chart for Export
+            const exportChartRef = useRef(null);
 
             const t = TRANSLATIONS[lang] || TRANSLATIONS['en']; 
             const selectedNode = nodes.find(n => n.id === selectedNodeId);
@@ -748,15 +754,16 @@
             };
 
             const aiAutoCompleteAll = async () => {
-                setLoadingState({ global: true, node: null });
+                setLoadingState({ global: true, node: null, status: 'Analyzing gaps...' });
                 setToastMessage(`🔄 Mengisi node ${nodes.filter(n => !n.content.trim()).length} yang kosong...`);
                 for (const node of nodes) {
                     if (!node.content || node.content.trim() === '') {
+                        setLoadingState({ global: true, node: null, status: `Thinking: ${node.type}...` });
                         await aiFillNode(node.id, node.type, "");
                         await new Promise(r => setTimeout(r, 2000));
                     }
                 }
-                setLoadingState({ global: false, node: null });
+                setLoadingState({ global: false, node: null, status: '' });
                 setToastMessage(null);
             };
 
@@ -766,11 +773,7 @@
                     return;
                 }
                 const targetNode = nodes.find(n => n.id === selectedNodeId);
-                
-                if (!targetNode) {
-                    console.error("Node not found:", selectedNodeId);
-                    return;
-                }
+                if (!targetNode) return;
 
                 setLoadingState({ global: true, node: 'magic_comb' });
                 
@@ -821,15 +824,69 @@
                 setLoadingState({ global: false, node: null });
             };
 
+            // Helper to generate Average Chart Image
+            const generateAverageChartImage = (scores) => {
+                return new Promise((resolve) => {
+                    if (!exportChartRef.current) { resolve(null); return; }
+                    
+                    const ctx = exportChartRef.current.getContext('2d');
+                    const existingChart = Chart.getChart(exportChartRef.current);
+                    if (existingChart) existingChart.destroy();
+
+                    new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: [t.capability, t.opportunity, t.motivation],
+                            datasets: [{
+                                label: 'Average Profile',
+                                data: scores,
+                                backgroundColor: 'rgba(14, 165, 233, 0.5)',
+                                borderColor: '#0284c7',
+                                borderWidth: 2,
+                                pointBackgroundColor: '#0284c7',
+                            }]
+                        },
+                        options: {
+                            responsive: false, // Must be false for hidden canvas
+                            animation: {
+                                onComplete: function() {
+                                    resolve(this.toBase64Image());
+                                    this.destroy();
+                                }
+                            },
+                            scales: { r: { suggestedMin: 0, suggestedMax: 10, ticks: { display: false } } },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                });
+            };
+
             const exportReport = async () => {
                 if(!apiKey) { setShowArcadeModal(true); return; }
-                setLoadingState({ global: true, node: 'export' });
+                
+                // 1. Show Loading Screen
+                setLoadingState({ global: true, node: 'export', status: 'Calculating behavioral averages...' });
 
-                const w = window.open('', '_blank');
-                if (w) {
-                    w.document.write('<html><head><title>Generating Report...</title><style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;background:#f8fafc;color:#1e293b}h1{color:#0ea5e9}</style></head><body><h1>ImpactArchitect AI</h1><p>Writing your strategic report... Please wait.</p></body></html>');
+                // 2. Calculate Averages
+                let totalC = 0, totalO = 0, totalM = 0, count = 0;
+                Object.values(combData).forEach(d => {
+                    if(d.capability && d.opportunity && d.motivation) {
+                        totalC += parseInt(d.capability.score || 0);
+                        totalO += parseInt(d.opportunity.score || 0);
+                        totalM += parseInt(d.motivation.score || 0);
+                        count++;
+                    }
+                });
+
+                // Generate Chart Image if Data Exists
+                let avgImage = null;
+                if (count > 0 && exportChartRef.current) {
+                    setLoadingState({ global: true, node: 'export', status: 'Generating Average Radar Chart...' });
+                    avgImage = await generateAverageChartImage([totalC/count, totalO/count, totalM/count]);
                 }
 
+                // 3. Generate AI Text
+                setLoadingState({ global: true, node: 'export', status: 'Writing comprehensive analysis (AI)...' });
                 const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
                 const aiReport = await callGemini(`
                     Review this Theory of Change: ${tocText}.
@@ -842,32 +899,51 @@
                     Use Markdown.
                 `, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}. Professional consultant tone.`);
 
-                setLoadingState({ global: false, node: null });
+                setLoadingState({ global: true, node: 'export', status: 'Finalizing PDF Layout...' });
 
+                const w = window.open('', '_blank');
+                
                 const html = `
                     <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 900px; margin: 0 auto; line-height: 1.6; }
-                        h1 { color: #0f172a; border-bottom: 3px solid #0ea5e9; padding-bottom: 15px; margin-bottom: 20px; font-size: 24px; }
-                        h2 { color: #0ea5e9; margin-top: 30px; font-size: 18px; border-left: 4px solid #0ea5e9; padding-left: 10px; }
-                        .diagram-container { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0; text-align: center; }
+                        h1 { color: #0f172a; border-bottom: 3px solid #0ea5e9; padding-bottom: 15px; margin-bottom: 20px; font-size: 28px; }
+                        h2 { color: #0ea5e9; margin-top: 40px; font-size: 20px; border-left: 5px solid #0ea5e9; padding-left: 15px; background: #f0f9ff; padding-top: 10px; padding-bottom: 10px; border-radius: 0 8px 8px 0; }
+                        h3 { color: #334155; font-size: 16px; margin-top: 20px; font-weight: 700; }
+                        
+                        /* ToC Diagram */
+                        .diagram-container { background: #f8fafc; padding: 30px; border: 1px solid #e2e8f0; border-radius: 12px; margin: 20px 0; text-align: center; }
                         .node-box { 
-                            padding: 10px 15px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; 
-                            margin: 10px auto; width: 80%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: left; position: relative;
+                            padding: 15px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; 
+                            margin: 15px auto; width: 80%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: left; position: relative;
                         }
-                        .arrow { color: #cbd5e1; font-size: 20px; margin: 5px 0; }
-                        .badge { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 5px; display: block; }
-                        .risk-high { border-left: 4px solid #f97316; } .risk-critical { border-left: 4px solid #ef4444; }
-                        .ai-content { background: #fff; padding: 20px; border-radius: 8px; }
-                        .radar-snapshot { float: right; width: 300px; margin: 0 0 20px 20px; border: 1px solid #eee; padding: 10px; border-radius: 8px; }
+                        .arrow { color: #cbd5e1; font-size: 24px; margin: 10px 0; }
+                        .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+                        .risk-high { border-left: 5px solid #f97316; } .risk-critical { border-left: 5px solid #ef4444; }
+                        
+                        /* AI Content */
+                        .ai-content { background: #fff; padding: 20px; border-radius: 8px; font-size: 14px; text-align: justify; }
+                        .radar-snapshot { float: right; width: 320px; margin: 0 0 20px 30px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+                        
+                        /* COM-B Grid Layout */
+                        .com-b-entry { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 30px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); page-break-inside: avoid; }
+                        .com-b-header { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+                        .com-b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                        .com-b-section h4 { font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+                        .com-b-section p, .com-b-section ul { font-size: 13px; color: #334155; line-height: 1.5; margin: 0; }
+                        .com-b-section ul { padding-left: 20px; }
+                        
+                        .score-summary { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
+                        .score-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #f1f5f9; color: #475569; }
+
                         .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; }
                     </style>
                     </head><body>
                     <h1>${projectTitle || 'Strategic Report'}</h1>
-                    <p><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    <p style="color: #64748b; font-size: 14px;"><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
                     
-                    <h2>1. Theory of Change Diagram</h2>
+                    <h2>1. Diagram Alur (Theory of Change)</h2>
                     <div class="diagram-container">
                         ${nodes.map((n, i) => `
                             <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
@@ -878,21 +954,41 @@
                         `).join('')}
                     </div>
 
-                    ${chartImage ? `<img src="${chartImage}" class="radar-snapshot" />` : ''}
-
-                    <h2>2. AI Strategic Analysis</h2>
+                    <h2>2. Strategic Analysis (Executive Summary)</h2>
                     <div class="ai-content">
+                        ${avgImage ? `<img src="${avgImage}" class="radar-snapshot" />` : ''}
                         ${marked.parse(aiReport || 'Analysis unavailable.')}
+                        <div style="clear: both;"></div>
                     </div>
 
-                    <h2>3. Detailed Behavioral Register</h2>
+                    <h2>3. Detailed Behavioral Register (Diagnosis)</h2>
                     ${Object.entries(combData).map(([k,v]) => {
                          const n = nodes.find(x=>x.id===k);
-                         return n ? `<div class="node-box"><strong>Target:</strong> ${n.content}<br><br><strong>Diagnosis:</strong> ${v.summary}<br><strong>Intervention:</strong> ${v.intervention}</div>` : ''
+                         if (!n) return '';
+                         return `
+                            <div class="com-b-entry">
+                                <div class="com-b-header">Target Behavior: ${n.content}</div>
+                                <div class="com-b-grid">
+                                    <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
+                                        <h4>🔍 DIAGNOSIS (Root Cause)</h4>
+                                        ${marked.parse(v.summary || 'No diagnosis recorded.')}
+                                    </div>
+                                    <div class="com-b-section" style="background: #f0fdf4; padding: 15px; border-radius: 8px;">
+                                        <h4>💡 INTERVENTION STRATEGY</h4>
+                                        ${marked.parse(v.intervention || 'No intervention recorded.')}
+                                    </div>
+                                </div>
+                                <div class="score-summary">
+                                    <span class="score-pill">Capability: ${v.capability.score}/10</span>
+                                    <span class="score-pill">Opportunity: ${v.opportunity.score}/10</span>
+                                    <span class="score-pill">Motivation: ${v.motivation.score}/10</span>
+                                </div>
+                            </div>
+                         `;
                     }).join('')}
                     
                     <div class="footer">
-                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect
+                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.1
                     </div>
                     <script>window.print()<\/script></body></html>
                 `;
@@ -904,6 +1000,8 @@
                 } else {
                     alert("Please allow popups to view the report.");
                 }
+                
+                setLoadingState({ global: false, node: null, status: '' });
             };
 
             // --- RENDER ---
@@ -998,6 +1096,12 @@
 
             return (
                 <div className="flex flex-col h-screen overflow-hidden text-slate-800">
+                    {/* HIDDEN CANVAS FOR EXPORT CHART GENERATION */}
+                    <canvas ref={exportChartRef} width="400" height="400" className="hidden"></canvas>
+
+                    {/* LOADING OVERLAY */}
+                    {loadingState.global && loadingState.node === 'export' && <LoadingOverlay status={loadingState.status} />}
+
                     {showArcadeModal && <ArcadeModal onClose={() => setShowArcadeModal(false)} t={t} />}
                     {isTutorial && tourStep >= 0 && <TourOverlay step={tourStep} t={t} onNext={() => setTourStep(prev => prev >= 4 ? -1 : prev + 1)} onSkip={() => setTourStep(-1)} />}
                     {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
@@ -1006,7 +1110,7 @@
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
                             <div>
-                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.0</span></h1>
+                                <h1 className="font-bold text-lg leading-tight tracking-tight">ImpactArchitect <span className="text-blue-500">3.1</span></h1>
                                 <div className="flex items-center gap-2">
                                     <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded text-white ${isTutorial ? 'bg-amber-500' : 'bg-blue-500'}`}>{isTutorial ? 'SANDBOX' : t.mode_label.toUpperCase()}</span>
                                     <button onClick={() => setLang(lang === 'en' ? 'id' : 'en')} className="text-[9px] font-bold bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded text-slate-500 transition-colors">{lang.toUpperCase()}</button>
