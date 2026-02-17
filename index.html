@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v3.3 - Smart Context Logic</title>
+    <title>ImpactArchitect v3.3 - Rich Text Editor</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -114,16 +114,25 @@
             text-shadow: 2px 2px 0px #000;
         }
 
-        /* Rich Text Preview Styles */
-        .markdown-preview ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
-        .markdown-preview ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
-        .markdown-preview h1 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.5rem; margin-top: 0.5rem; }
-        .markdown-preview h2 { font-size: 1.25em; font-weight: bold; margin-bottom: 0.5rem; margin-top: 0.5rem; }
-        .markdown-preview h3 { font-size: 1.1em; font-weight: bold; margin-bottom: 0.5rem; }
-        .markdown-preview strong { font-weight: 700; color: #1e293b; }
-        .markdown-preview em { font-style: italic; color: #475569; }
-        .markdown-preview p { margin-bottom: 0.5rem; }
-        .markdown-preview { font-size: 1rem; color: #334155; line-height: 1.6; }
+        /* --- MARKDOWN RENDER STYLES --- */
+        .rendered-content h1, .rendered-content h2, .rendered-content h3 { font-weight: 700; margin-bottom: 0.5em; color: #1e293b; margin-top: 0.5em; }
+        .rendered-content h3 { font-size: 1.1em; }
+        .rendered-content p { margin-bottom: 0.5em; line-height: 1.6; }
+        .rendered-content ul { list-style-type: disc; padding-left: 1.2em; margin-bottom: 0.5em; }
+        .rendered-content ol { list-style-type: decimal; padding-left: 1.2em; margin-bottom: 0.5em; }
+        .rendered-content li { margin-bottom: 0.25em; }
+        .rendered-content strong { font-weight: 700; color: #0f172a; }
+        .rendered-content em { font-style: italic; }
+        .rendered-content blockquote { border-left: 3px solid #cbd5e1; padding-left: 1em; color: #64748b; font-style: italic; }
+        
+        /* Hide scrollbar in textarea but allow scroll if needed technically (though we autosize) */
+        textarea.no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        textarea.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -131,140 +140,6 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useLayoutEffect } = React;
-
-        // --- COMPONENTS ---
-
-        // RICH TEXT EDITOR COMPONENT
-        const RichTextEditor = ({ value, onChange, placeholder, isSelected }) => {
-            const textareaRef = useRef(null);
-            const [isEditing, setIsEditing] = useState(false);
-
-            // Robust Auto-resize logic
-            const adjustHeight = () => {
-                const el = textareaRef.current;
-                if (el) {
-                    el.style.height = 'auto'; 
-                    el.style.height = el.scrollHeight + 'px';
-                }
-            };
-
-            // Double trigger resize to fix "Load" issue
-            useLayoutEffect(() => {
-                if (isEditing || isSelected) {
-                    adjustHeight();
-                    // Fallback for slow rendering/font loading
-                    const timer = setTimeout(adjustHeight, 50);
-                    const timer2 = setTimeout(adjustHeight, 200);
-                    return () => { clearTimeout(timer); clearTimeout(timer2); };
-                }
-            }, [value, isEditing, isSelected]);
-
-            // Sync editing state with parent selection
-            useEffect(() => {
-                if (isSelected) {
-                    setIsEditing(true);
-                    // Focus cursor at end when selected
-                    if (textareaRef.current) {
-                        textareaRef.current.focus();
-                        const len = textareaRef.current.value.length;
-                        textareaRef.current.setSelectionRange(len, len);
-                    }
-                } else {
-                    setIsEditing(false);
-                }
-            }, [isSelected]);
-
-            const insertMarkdown = (syntax, type) => {
-                const el = textareaRef.current;
-                if (!el) return;
-
-                const start = el.selectionStart;
-                const end = el.selectionEnd;
-                const text = el.value;
-                const selectedText = text.substring(start, end);
-                
-                let newText = '';
-                let newCursorPos = 0;
-
-                if (type === 'wrap') {
-                    // Bold, Italic
-                    newText = text.substring(0, start) + syntax + selectedText + syntax + text.substring(end);
-                    newCursorPos = end + (syntax.length * 2);
-                } else if (type === 'prefix') {
-                    // Header, Bullet
-                    // Check if we are at start of line
-                    const lineStart = text.lastIndexOf('\n', start - 1) + 1;
-                    const prefix = syntax + ' ';
-                    newText = text.substring(0, lineStart) + prefix + text.substring(lineStart);
-                    newCursorPos = start + prefix.length;
-                }
-
-                onChange(newText);
-                setTimeout(() => {
-                    el.focus();
-                    el.setSelectionRange(newCursorPos, newCursorPos);
-                    adjustHeight();
-                }, 0);
-            };
-
-            const handleKeyDown = (e) => {
-                if (e.key === 'Enter') {
-                    const el = e.target;
-                    const { selectionStart, value } = el;
-                    const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
-                    const textBeforeCursor = value.substring(lineStart, selectionStart);
-                    const match = textBeforeCursor.match(/^(\s*[-*•]\s)/);
-                    
-                    if (match) {
-                        e.preventDefault(); 
-                        const bullet = match[1]; 
-                        const newValue = value.substring(0, selectionStart) + '\n' + bullet + value.substring(selectionStart);
-                        onChange(newValue);
-                        setTimeout(() => {
-                            if (textareaRef.current) {
-                                const newCursorPos = selectionStart + bullet.length + 1;
-                                textareaRef.current.selectionStart = textareaRef.current.selectionEnd = newCursorPos;
-                                adjustHeight(); 
-                            }
-                        }, 0);
-                    }
-                }
-            };
-
-            if (!isEditing && value) {
-                // View Mode (Rendered Markdown)
-                return (
-                    <div 
-                        className="markdown-preview cursor-text min-h-[60px] w-full"
-                        onClick={(e) => { e.stopPropagation(); onChange(value); /* Trigger parent select */ }}
-                        dangerouslySetInnerHTML={{ __html: marked.parse(value) }}
-                    />
-                );
-            }
-
-            return (
-                <div className="relative w-full">
-                    {isSelected && (
-                        <div className="flex items-center gap-1 mb-2 bg-slate-100 p-1 rounded-lg w-max shadow-sm animate-fade-in absolute -top-12 left-0 z-20 border border-slate-200">
-                            <button onClick={(e) => { e.stopPropagation(); insertMarkdown('**', 'wrap'); }} className="w-6 h-6 flex items-center justify-center rounded hover:bg-white hover:shadow text-slate-600 font-bold text-xs" title="Bold">B</button>
-                            <button onClick={(e) => { e.stopPropagation(); insertMarkdown('*', 'wrap'); }} className="w-6 h-6 flex items-center justify-center rounded hover:bg-white hover:shadow text-slate-600 italic text-xs font-serif" title="Italic">I</button>
-                            <div className="w-px h-4 bg-slate-300 mx-1"></div>
-                            <button onClick={(e) => { e.stopPropagation(); insertMarkdown('-', 'prefix'); }} className="w-6 h-6 flex items-center justify-center rounded hover:bg-white hover:shadow text-slate-600 text-xs" title="Bullet List"><i className="fa-solid fa-list-ul"></i></button>
-                            <button onClick={(e) => { e.stopPropagation(); insertMarkdown('###', 'prefix'); }} className="w-6 h-6 flex items-center justify-center rounded hover:bg-white hover:shadow text-slate-600 text-[10px] font-bold" title="Header">H3</button>
-                        </div>
-                    )}
-                    <textarea
-                        ref={textareaRef}
-                        value={value}
-                        onChange={(e) => onChange(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder={placeholder}
-                        className="w-full bg-transparent border-none p-0 text-base font-medium text-slate-700 placeholder-slate-300 focus:ring-0 resize-none leading-relaxed overflow-hidden min-h-[60px]"
-                        rows={1}
-                    />
-                </div>
-            );
-        };
 
         // --- CONSTANTS & CONFIG ---
         const TRANSLATIONS = {
@@ -384,7 +259,7 @@
                 mode_label: "Workspace",
                 toc_title: "Theory of Change Canvas",
                 comb_title: "Behavioral Analysis (COM-B)",
-                btn_auto_complete: "Auto-Complete All (AI)",
+                btn_auto_complete: "Auto-Complete (AI)",
                 btn_detect: "Detect Behavior",
                 btn_intervention: "Suggest Intervention",
                 btn_export: "Export Report",
@@ -466,9 +341,9 @@
                 titleID: 'Program Kesejahteraan Petani Kopi - Jawa Barat',
                 nodes: [
                     { id: '1', type: 'impact', content: 'Increase average household income of smallholder coffee farmers by 40% within 2 years', risk: 'low' },
-                    { id: '2', type: 'outcome', content: 'Farmers adopt wet-hulling fermentation technique and sell specialty-grade coffee to premium buyers', risk: 'high' },
-                    { id: '3', type: 'output', content: '200 farmers trained in wet-hulling fermentation and post-harvest processing', risk: 'low' },
-                    { id: '4', type: 'activity', content: 'Conduct 5-day hands-on workshop on fermentation tanks, pH monitoring, and quality control', risk: 'low' }
+                    { id: '2', type: 'outcome', content: '### Medium Term\n- Farmers adopt wet-hulling fermentation technique\n- Sell specialty-grade coffee to premium buyers', risk: 'high' },
+                    { id: '3', type: 'output', content: '- 200 farmers trained in wet-hulling fermentation\n- 50 Post-harvest processing kits distributed', risk: 'low' },
+                    { id: '4', type: 'activity', content: '- Conduct 5-day hands-on workshop\n- Setup fermentation tanks\n- Quality control training', risk: 'low' }
                 ],
                 combData: {
                     '2': {
@@ -510,6 +385,8 @@
                 }
             }
         };
+
+        // --- COMPONENTS ---
 
         const Toast = ({ message, onClose }) => (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[120] flex items-center gap-3 animate-slide-up border border-slate-700">
@@ -693,6 +570,16 @@
             );
         };
 
+        // --- NEW: EDITOR TOOLBAR ---
+        const EditorToolbar = ({ onFormat }) => (
+            <div className="absolute -top-10 left-0 bg-white shadow-lg border border-slate-200 rounded-lg flex items-center p-1 gap-1 z-20 animate-fade-in">
+                <button onClick={(e) => { e.stopPropagation(); onFormat('bold'); }} className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600 transition-colors" title="Bold"><i className="fa-solid fa-bold"></i></button>
+                <button onClick={(e) => { e.stopPropagation(); onFormat('italic'); }} className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600 transition-colors" title="Italic"><i className="fa-solid fa-italic"></i></button>
+                <button onClick={(e) => { e.stopPropagation(); onFormat('list'); }} className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600 transition-colors" title="List"><i className="fa-solid fa-list-ul"></i></button>
+                <button onClick={(e) => { e.stopPropagation(); onFormat('h3'); }} className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600 text-xs font-bold transition-colors" title="Heading">H3</button>
+            </div>
+        );
+
         // --- MAIN APPLICATION ---
         function App() {
             const [lang, setLang] = useState('en');
@@ -711,12 +598,25 @@
             const [loadingState, setLoadingState] = useState({ global: false, node: null, status: '' });
             const [chartImage, setChartImage] = useState(null);
             
+            // Textarea Refs for resizing
+            const textareaRefs = useRef({});
+            
             // Hidden Chart for Export
             const exportChartRef = useRef(null);
 
             const t = TRANSLATIONS[lang] || TRANSLATIONS['en']; 
             const selectedNode = nodes.find(n => n.id === selectedNodeId);
             const nodeComb = (selectedNodeId && combData[selectedNodeId]) ? combData[selectedNodeId] : getInitialComb();
+
+            // Auto resize textarea when entering edit mode
+            useEffect(() => {
+                if(selectedNodeId && textareaRefs.current[selectedNodeId]) {
+                    const el = textareaRefs.current[selectedNodeId];
+                    el.style.height = 'auto';
+                    el.style.height = el.scrollHeight + 'px';
+                    el.focus();
+                }
+            }, [selectedNodeId]);
 
             const startSession = (sessionMode, isTut, initialData = [], title = "", initialCombData = {}) => {
                 setMode(sessionMode);
@@ -761,6 +661,54 @@
                 if (selectedNodeId === id) setSelectedNodeId(null);
             };
 
+            const handleFormat = (id, formatType) => {
+                const el = textareaRefs.current[id];
+                if(!el) return;
+
+                const start = el.selectionStart;
+                const end = el.selectionEnd;
+                const text = el.value;
+                const before = text.substring(0, start);
+                const selected = text.substring(start, end);
+                const after = text.substring(end);
+
+                let newText = text;
+                let newCursorPos = end;
+
+                if (formatType === 'bold') {
+                    newText = `${before}**${selected}**${after}`;
+                    newCursorPos = end + 4;
+                } else if (formatType === 'italic') {
+                    newText = `${before}*${selected}*${after}`;
+                    newCursorPos = end + 2;
+                } else if (formatType === 'list') {
+                     // Simple list toggle or append
+                     const prefix = "\n- ";
+                     newText = `${before}${prefix}${selected}${after}`;
+                     newCursorPos = end + prefix.length;
+                } else if (formatType === 'h3') {
+                     const prefix = "### ";
+                     newText = `${before}${prefix}${selected}${after}`;
+                     newCursorPos = end + prefix.length;
+                }
+
+                updateNode(id, 'content', newText);
+                
+                // Need to defer cursor setting slightly for React re-render
+                setTimeout(() => {
+                    if(textareaRefs.current[id]) {
+                        textareaRefs.current[id].focus();
+                        textareaRefs.current[id].setSelectionRange(newCursorPos, newCursorPos);
+                        // Trigger resize
+                         textareaRefs.current[id].style.height = 'auto';
+                         textareaRefs.current[id].style.height = textareaRefs.current[id].scrollHeight + 'px';
+                    }
+                }, 0);
+            };
+
+
+            // ... (rest of logic like updateComb, calculateRisk, AI functions remains same) ...
+            // Copied from previous logic for brevity, assumed intact
             const updateComb = (category, field, value) => {
                 setCombData(prev => {
                     const existingNode = prev[selectedNodeId] || getInitialComb();
@@ -811,10 +759,8 @@
                         if(data.mode) setMode(data.mode);
                         if(data.projectTitle) setProjectTitle(data.projectTitle);
                         if (data.lang) setLang(data.lang);
-
                         if(!mode && data.mode) setMode(data.mode);
                         if(!mode && !data.mode) setMode('design');
-                        
                         setToastMessage("✅ Project loaded!");
                         setTimeout(() => setToastMessage(null), 2500);
                     } catch(err) { alert("Invalid file"); }
@@ -822,16 +768,14 @@
                 reader.readAsText(file);
             };
 
-            // AI INTEGRATION
+             // AI INTEGRATION
             const callGemini = async (prompt, systemInstruction = "") => {
                 if (!apiKey) {
                     setShowArcadeModal(true);
                     return null;
                 }
-                
                 const model = 'gemini-2.5-flash';
                 const delays = [1000, 2000, 4000, 8000, 16000];
-
                 for (let attempt = 0; attempt <= delays.length; attempt++) {
                     try {
                         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -842,7 +786,6 @@
                                 systemInstruction: { parts: [{ text: systemInstruction }] } 
                             })
                         });
-
                         if (!res.ok) {
                             const status = res.status;
                             if (status === 429 || status === 503) {
@@ -858,14 +801,12 @@
                             setTimeout(() => setToastMessage(null), 5000);
                             return null;
                         }
-
                         const data = await res.json();
                         if (attempt > 0) {
                              setToastMessage("✅ Terhubung kembali!");
                              setTimeout(() => setToastMessage(null), 2000);
                         }
                         return data.candidates?.[0]?.content?.parts?.[0]?.text;
-
                     } catch (e) { 
                         console.error("Fetch error:", e);
                         if (attempt < delays.length) {
@@ -881,24 +822,19 @@
 
             const aiFillNode = async (nodeId, type, currentContent) => {
                 setLoadingState({ global: false, node: nodeId });
-                
                 const nodeIndex = nodes.findIndex(n => n.id === nodeId);
                 const previousNodes = nodes.slice(0, nodeIndex).map(n => `[${n.type.toUpperCase()}]: ${n.content}`).join(" -> ");
                 const context = previousNodes ? `Context so far: ${previousNodes}` : "This is the first step of the program.";
-                
                 const prompt = `
                     You are an expert policy consultant. 
                     ${context}
-                    
                     Task: Generate a realistic, specific, and logical content for the NEXT step which is a: ${type.toUpperCase()}.
                     The current draft content is: "${currentContent}" (if empty, generate from scratch).
-                    
                     Rules:
                     1. Output ONLY the content text. No labels, no quotes.
-                    2. Be concise but specific.
+                    2. Use Markdown formatting (bullet points, bold) where appropriate.
                     3. Ensure logical flow from previous steps.
                 `;
-                
                 const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
                 if (res) updateNode(nodeId, 'content', res);
                 setLoadingState({ global: false, node: null });
@@ -918,46 +854,33 @@
                 setToastMessage(null);
             };
 
-            // --- UPGRADED AI LOGIC: CROSS-CHECK CONTEXT ---
             const getContextString = () => {
-                // Organize nodes by typical ToC flow for context
                 const layerOrder = ['input', 'activity', 'output', 'outcome', 'impact'];
                 const sorted = [...nodes].sort((a, b) => layerOrder.indexOf(a.type) - layerOrder.indexOf(b.type));
                 return sorted.map(n => `(${n.type.toUpperCase()}): ${n.content}`).join("\n⬇️\n");
             };
 
             const aiMagicComb = async () => {
-                if (!selectedNodeId) {
-                    alert("Please select a node first.");
-                    return;
-                }
+                if (!selectedNodeId) { alert("Please select a node first."); return; }
                 const targetNode = nodes.find(n => n.id === selectedNodeId);
                 if (!targetNode) return;
-
                 setLoadingState({ global: true, node: 'magic_comb' });
-                
                 const fullContext = getContextString();
-                
-                // Prompt upgraded to check context
                 const prompt = `
                     CONTEXT OF THE PROGRAM (Theory of Change Chain):
                     ${fullContext}
-
                     TARGET NODE TO ANALYZE (Behavior/Action):
                     [${targetNode.type.toUpperCase()}]: "${targetNode.content}"
-
                     Task: 
                     1. Analyze the target node.
                     2. Estimate behavioral scores (1-10) for Capability, Opportunity, Motivation.
                     3. Consider the CONTEXT: 
-                       - Does the previous 'Activity' actually provide the skill (Capability)? 
-                       - Does the 'Input' provide the resources (Opportunity)?
-                       - Is the 'Impact' motivating enough?
-                    
+                        - Does the previous 'Activity' actually provide the skill (Capability)? 
+                        - Does the 'Input' provide the resources (Opportunity)?
+                        - Is the 'Impact' motivating enough?
                     Return valid JSON ONLY: { "c_score": 5, "c_note": "...", "o_score": 5, "o_note": "...", "m_score": 5, "m_note": "..." }
                 `;
-                
-                const res = await callGemini(prompt, "You are a JSON generator. Analyze connectivity between nodes.");
+                const res = await callGemini(prompt, `You are a JSON generator. Analyze connectivity between nodes. Write all notes in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
                 if (res) {
                     try {
                         const cleanRes = res.replace(/```json/g, '').replace(/```/g, '');
@@ -982,28 +905,23 @@
                 if (!selectedNodeId) return;
                 const targetNode = nodes.find(n => n.id === selectedNodeId);
                 if (!targetNode) return;
-
                 setLoadingState({ global: true, node: 'analyze_btn' });
-                
                 const fullContext = getContextString();
-
-                // Cross-check prompt
+                const isId = lang === 'id';
+                const h1 = isId ? "**🔍 CEK LOGIKA:**" : "**🔍 LOGIC CROSS-CHECK:**";
+                const h2 = isId ? "**👤 PERILAKU:**" : "**👤 BEHAVIOR:**";
                 const prompt = `
                     FULL PROGRAM CONTEXT:
                     ${fullContext}
-
                     FOCUS NODE: "${targetNode.content}"
-
                     Task: specific behavior analysis.
                     CRITICAL: Don't just analyze the node in isolation. Analyze the LOGIC FLOW.
                     - Is there a gap between Output and Outcome?
                     - Are the assumptions valid based on previous nodes?
-                    
                     Output format:
-                    **🔍 LOGIC CROSS-CHECK:** (Explain the connection/disconnection with other nodes)
-                    **👤 BEHAVIOR:** (Who needs to do what)
+                    ${h1} (Explain the connection/disconnection with other nodes)
+                    ${h2} (Who needs to do what)
                 `;
-
                 const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}. Be critical.`);
                 if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), summary: res } }));
                 setLoadingState({ global: false, node: null });
@@ -1013,51 +931,42 @@
                  if (!selectedNodeId) return;
                  const targetNode = nodes.find(n => n.id === selectedNodeId);
                  if (!targetNode) return;
-
                 setLoadingState({ global: true, node: 'intervention_btn' });
                 const d = nodeComb;
                 const fullContext = getContextString();
-
-                // Advanced prompt looking for structural solutions
+                const isId = lang === 'id';
+                const h1 = isId ? "## 🔍 ANALISIS KETERKAITAN (Logic Cross-check)" : "## 🔍 LOGIC ANALYSIS (Cross-check)";
+                const h2 = isId ? "## 💡 REKOMENDASI STRATEGIS" : "## 💡 STRATEGIC RECOMMENDATIONS";
                 const prompt = `
                     PROGRAM CONTEXT:
                     ${fullContext}
-                    
                     PROBLEM NODE: "${targetNode.content}"
                     SCORES: C:${d.capability.score}, O:${d.opportunity.score}, M:${d.motivation.score}
                     DIAGNOSIS: ${d.summary}
-
                     Task: Suggest 3 strategic interventions.
-                    
                     Constraint: 
                     Do not just suggest "training". Look at the CHAIN. 
                     - Maybe the "Input" needs to change?
                     - Maybe the "Activity" is wrong?
-                    
                     Output Format:
-                    ## 🔍 ANALISIS KETERKAITAN (Logic Cross-check)
+                    ${h1}
                     (Explain if the failure is due to upstream nodes (Activity/Output) or downstream (Impact))
-
-                    ## 💡 REKOMENDASI STRATEGIS
+                    ${h2}
                     1. ...
                     2. ...
                     3. ...
                 `;
-                
-                const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
+                const res = await callGemini(prompt, `Respond in ${isId ? 'Indonesian' : 'English'}.`);
                 if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), intervention: res } }));
                 setLoadingState({ global: false, node: null });
             };
 
-            // Helper to generate Average Chart Image
             const generateAverageChartImage = (scores) => {
                 return new Promise((resolve) => {
                     if (!exportChartRef.current) { resolve(null); return; }
-                    
                     const ctx = exportChartRef.current.getContext('2d');
                     const existingChart = Chart.getChart(exportChartRef.current);
                     if (existingChart) existingChart.destroy();
-
                     new Chart(ctx, {
                         type: 'radar',
                         data: {
@@ -1088,11 +997,7 @@
 
             const exportReport = async () => {
                 if(!apiKey) { setShowArcadeModal(true); return; }
-                
-                // 1. Show Loading Screen
                 setLoadingState({ global: true, node: 'export', status: 'Calculating behavioral averages...' });
-
-                // 2. Calculate Averages
                 let totalC = 0, totalO = 0, totalM = 0, count = 0;
                 Object.values(combData).forEach(d => {
                     if(d.capability && d.opportunity && d.motivation) {
@@ -1102,15 +1007,11 @@
                         count++;
                     }
                 });
-
-                // Generate Chart Image if Data Exists
                 let avgImage = null;
                 if (count > 0 && exportChartRef.current) {
                     setLoadingState({ global: true, node: 'export', status: 'Generating Average Radar Chart...' });
                     avgImage = await generateAverageChartImage([totalC/count, totalO/count, totalM/count]);
                 }
-
-                // 3. Generate AI Text
                 setLoadingState({ global: true, node: 'export', status: 'Writing comprehensive analysis (AI)...' });
                 const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
                 const aiReport = await callGemini(`
@@ -1123,17 +1024,12 @@
                     4. Strategic Recommendations.
                     Use Markdown.
                 `, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}. Professional consultant tone.`);
-
                 setLoadingState({ global: true, node: 'export', status: 'Finalizing PDF Layout...' });
-
                 const w = window.open('', '_blank');
-                
-                // --- EXPORT DIAGRAM GENERATION (Updated to respect flow) ---
                 const layers = ['impact', 'outcome', 'output', 'activity', 'input'];
                 const sortedDiagramHtml = layers.map((layer, index) => {
                    const layerNodes = nodes.filter(n => n.type === layer);
                    if (layerNodes.length === 0) return '';
-                   
                    return layerNodes.map(n => `
                         <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
                             <span class="badge" style="color: ${layer === 'input' ? '#7c3aed' : ''}">${n.type}</span>
@@ -1141,8 +1037,6 @@
                         </div>
                    `).join('') + (index < layers.length - 1 && layerNodes.length > 0 ? '<div class="arrow">↓</div>' : '');
                 }).join('');
-
-
                 const html = `
                     <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1151,8 +1045,6 @@
                         h1 { color: #0f172a; border-bottom: 3px solid #0ea5e9; padding-bottom: 15px; margin-bottom: 20px; font-size: 28px; }
                         h2 { color: #0ea5e9; margin-top: 40px; font-size: 20px; border-left: 5px solid #0ea5e9; padding-left: 15px; background: #f0f9ff; padding-top: 10px; padding-bottom: 10px; border-radius: 0 8px 8px 0; }
                         h3 { color: #334155; font-size: 16px; margin-top: 20px; font-weight: 700; }
-                        
-                        /* ToC Diagram */
                         .diagram-container { background: #f8fafc; padding: 30px; border: 1px solid #e2e8f0; border-radius: 12px; margin: 20px 0; text-align: center; }
                         .node-box { 
                             padding: 15px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; 
@@ -1161,40 +1053,29 @@
                         .arrow { color: #cbd5e1; font-size: 24px; margin: 10px 0; }
                         .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
                         .risk-high { border-left: 5px solid #f97316; } .risk-critical { border-left: 5px solid #ef4444; }
-                        
-                        /* AI Content */
                         .ai-content { background: #fff; padding: 20px; border-radius: 8px; font-size: 14px; text-align: justify; }
                         .radar-snapshot { float: right; width: 320px; margin: 0 0 20px 30px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
-                        
-                        /* COM-B Grid Layout */
                         .com-b-entry { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 30px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); page-break-inside: avoid; }
                         .com-b-header { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
                         .com-b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
                         .com-b-section h4 { font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
                         .com-b-section p, .com-b-section ul { font-size: 13px; color: #334155; line-height: 1.5; margin: 0; }
                         .com-b-section ul { padding-left: 20px; }
-                        
                         .score-summary { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
                         .score-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #f1f5f9; color: #475569; }
-
                         .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; }
                     </style>
                     </head><body>
                     <h1>${projectTitle || 'Strategic Report'}</h1>
                     <p style="color: #64748b; font-size: 14px;"><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                    
                     <h2>1. Diagram Alur (Theory of Change)</h2>
-                    <div class="diagram-container">
-                        ${sortedDiagramHtml}
-                    </div>
-
+                    <div class="diagram-container">${sortedDiagramHtml}</div>
                     <h2>2. Strategic Analysis (Executive Summary)</h2>
                     <div class="ai-content">
                         ${avgImage ? `<img src="${avgImage}" class="radar-snapshot" />` : ''}
                         ${marked.parse(aiReport || 'Analysis unavailable.')}
                         <div style="clear: both;"></div>
                     </div>
-
                     <h2>3. Detailed Behavioral Register (Diagnosis)</h2>
                     ${Object.entries(combData).map(([k,v]) => {
                          const n = nodes.find(x=>x.id===k);
@@ -1220,13 +1101,9 @@
                             </div>
                          `;
                     }).join('')}
-                    
-                    <div class="footer">
-                        Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3
-                    </div>
+                    <div class="footer">Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3</div>
                     <script>window.print()<\/script></body></html>
                 `;
-                
                 if (w) {
                     w.document.open();
                     w.document.write(html);
@@ -1234,7 +1111,6 @@
                 } else {
                     alert("Please allow popups to view the report.");
                 }
-                
                 setLoadingState({ global: false, node: null, status: '' });
             };
 
@@ -1330,12 +1206,8 @@
 
             return (
                 <div className="flex flex-col h-screen overflow-hidden text-slate-800">
-                    {/* HIDDEN CANVAS FOR EXPORT CHART GENERATION */}
                     <canvas ref={exportChartRef} width="400" height="400" className="hidden"></canvas>
-
-                    {/* LOADING OVERLAY */}
                     {loadingState.global && loadingState.node === 'export' && <LoadingOverlay status={loadingState.status} />}
-
                     {showArcadeModal && <ArcadeModal onClose={() => setShowArcadeModal(false)} t={t} />}
                     {isTutorial && tourStep >= 0 && <TourOverlay step={tourStep} t={t} onNext={() => setTourStep(prev => prev >= 4 ? -1 : prev + 1)} onSkip={() => setTourStep(-1)} />}
                     {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
@@ -1379,7 +1251,6 @@
                                 {Object.keys(NODE_TYPES).map(type => (
                                     <button key={type} onClick={() => addNode(type)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 border ${NODE_TYPES[type].bg} ${NODE_TYPES[type].border}`}>
                                         <i className={`fa-solid ${NODE_TYPES[type].icon} opacity-60`}></i>
-                                        {/* Defensive check for translation */}
                                         {(t[NODE_TYPES[type].key] || '').split(' ')[0]} <span className="ml-1 opacity-50">+</span>
                                     </button>
                                 ))}
@@ -1401,7 +1272,6 @@
                                             <p className="text-slate-500 font-medium">{t.empty_state}</p>
                                         </div>
                                     ) : (
-                                        // UPDATED RENDER LOOP TO INCLUDE 'input' and ORDER CORRECTLY
                                         ['impact', 'outcome', 'output', 'activity', 'input'].map(layer => {
                                             const layerNodes = nodes.filter(n => n.type === layer);
                                             if (layerNodes.length === 0) return null;
@@ -1414,27 +1284,57 @@
                                                         </span>
                                                         <div className={`h-px w-12 bg-slate-300 ml-3`}></div>
                                                     </div>
-                                                    {/* Vertical Layout Stack */}
                                                     <div className="flex flex-col items-center gap-4 w-full">
                                                         {layerNodes.map(node => (
                                                             <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full max-w-3xl ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
-                                                                <button onClick={(e) => { e.stopPropagation(); aiFillNode(node.id, node.type, node.content); }} className={`absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-slate-300 hover:text-purple-500 hover:bg-purple-50 transition-colors ${tourStep === 2 ? 'bg-amber-100 text-amber-500 animate-bounce-slow shadow-lg ring-2 ring-amber-400' : ''}`} title={t.magic_hint}>
+                                                                
+                                                                {/* Magic Wand for Text */}
+                                                                <button onClick={(e) => { e.stopPropagation(); aiFillNode(node.id, node.type, node.content); }} className={`absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-slate-300 hover:text-purple-500 hover:bg-purple-50 transition-colors z-10 ${tourStep === 2 ? 'bg-amber-100 text-amber-500 animate-bounce-slow shadow-lg ring-2 ring-amber-400' : ''}`} title={t.magic_hint}>
                                                                     {loadingState.node === node.id ? <i className="fa-solid fa-circle-notch fa-spin text-xs"></i> : <i className="fa-solid fa-wand-magic-sparkles text-xs"></i>}
                                                                 </button>
-                                                                <div className="flex items-start gap-4">
-                                                                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${NODE_TYPES[node.type].color} flex items-center justify-center text-white shadow-md shrink-0`}><i className={`fa-solid ${NODE_TYPES[node.type].icon} text-lg`}></i></div>
-                                                                    <div className="flex-1">
-                                                                        <RichTextEditor 
-                                                                            value={node.content} 
-                                                                            onChange={(val) => updateNode(node.id, 'content', val)} 
-                                                                            placeholder={t.placeholder_node} 
-                                                                            isSelected={selectedNodeId === node.id}
-                                                                        />
-                                                                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
-                                                                            <RiskTag level={node.risk} t={t} />
-                                                                            <button onClick={(e) => deleteNode(node.id, e)} className="text-slate-300 hover:text-red-400 text-sm"><i className="fa-solid fa-trash"></i></button>
+
+                                                                {/* Conditional Rendering: Edit Mode (Textarea) vs View Mode (Markdown) */}
+                                                                {selectedNodeId === node.id ? (
+                                                                    <div className="relative pt-2">
+                                                                        {/* Toolbar */}
+                                                                        <EditorToolbar onFormat={(type) => handleFormat(node.id, type)} />
+                                                                        <div className="flex items-start gap-4">
+                                                                            <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${NODE_TYPES[node.type].color} flex items-center justify-center text-white shadow-md shrink-0`}><i className={`fa-solid ${NODE_TYPES[node.type].icon} text-lg`}></i></div>
+                                                                            <div className="flex-1">
+                                                                                <textarea 
+                                                                                    ref={el => textareaRefs.current[node.id] = el}
+                                                                                    value={node.content} 
+                                                                                    onChange={(e) => {
+                                                                                        updateNode(node.id, 'content', e.target.value);
+                                                                                        e.target.style.height = 'auto';
+                                                                                        e.target.style.height = e.target.scrollHeight + 'px';
+                                                                                    }} 
+                                                                                    placeholder={t.placeholder_node} 
+                                                                                    className="w-full bg-transparent border-none p-0 text-base font-medium text-slate-700 placeholder-slate-300 focus:ring-0 resize-none leading-relaxed overflow-hidden no-scrollbar" 
+                                                                                    rows={4} 
+                                                                                />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+                                                                ) : (
+                                                                    <div className="flex items-start gap-4">
+                                                                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${NODE_TYPES[node.type].color} flex items-center justify-center text-white shadow-md shrink-0`}><i className={`fa-solid ${NODE_TYPES[node.type].icon} text-lg`}></i></div>
+                                                                        <div className="flex-1">
+                                                                            {/* Rendered Markdown View */}
+                                                                            <div className="rendered-content text-base font-medium text-slate-700 leading-relaxed">
+                                                                                {node.content ? (
+                                                                                    <div dangerouslySetInnerHTML={{ __html: marked.parse(node.content) }} />
+                                                                                ) : (
+                                                                                    <span className="text-slate-300 italic">Empty node...</span>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50 pl-16">
+                                                                    <RiskTag level={node.risk} t={t} />
+                                                                    <button onClick={(e) => deleteNode(node.id, e)} className="text-slate-300 hover:text-red-400 text-sm"><i className="fa-solid fa-trash"></i></button>
                                                                 </div>
                                                             </div>
                                                         ))}
