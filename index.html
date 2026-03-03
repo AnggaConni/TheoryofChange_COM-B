@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImpactArchitect v3.3 - Rich Text Editor</title>
+    <title>ImpactArchitect v3.3 - AI Assisted COM-B Diagnosis</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -835,7 +835,15 @@
                     2. Use Markdown formatting (bullet points, bold) where appropriate.
                     3. Ensure logical flow from previous steps.
                 `;
-                const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
+                const systemInstruction = `
+                Detect the primary language of the user's latest draft.
+                Respond ONLY in that exact language.
+                Do not translate.
+                Do not mix languages.
+                If multiple languages appear, use the dominant one.
+                `;
+
+                const res = await callGemini(prompt, systemInstruction);
                 if (res) updateNode(nodeId, 'content', res);
                 setLoadingState({ global: false, node: null });
             };
@@ -867,20 +875,25 @@
                 setLoadingState({ global: true, node: 'magic_comb' });
                 const fullContext = getContextString();
                 const prompt = `
-                    CONTEXT OF THE PROGRAM (Theory of Change Chain):
-                    ${fullContext}
-                    TARGET NODE TO ANALYZE (Behavior/Action):
-                    [${targetNode.type.toUpperCase()}]: "${targetNode.content}"
-                    Task: 
-                    1. Analyze the target node.
-                    2. Estimate behavioral scores (1-10) for Capability, Opportunity, Motivation.
-                    3. Consider the CONTEXT: 
-                        - Does the previous 'Activity' actually provide the skill (Capability)? 
-                        - Does the 'Input' provide the resources (Opportunity)?
-                        - Is the 'Impact' motivating enough?
-                    Return valid JSON ONLY: { "c_score": 5, "c_note": "...", "o_score": 5, "o_note": "...", "m_score": 5, "m_note": "..." }
-                `;
-                const res = await callGemini(prompt, `You are a JSON generator. Analyze connectivity between nodes. Write all notes in ${lang === 'id' ? 'Indonesian' : 'English'}.`);
+                FULL CONTEXT OF THE THEORY OF CHANGE (Chain of Logic):
+                ${fullContext}
+                
+                TARGET NODE TO ANALYZE (The Behavior/Action):
+                [${targetNode.type.toUpperCase()}]: "${targetNode.content}"
+                
+                Task: Act as an expert Behavioral Scientist. Analyze this node using the Advanced COM-B framework.
+                Estimate scores (1-10) and provide a razor-sharp diagnosis based on the CONTEXT provided.
+                
+                Evaluation Criteria:
+                - Capability (C): Assess both Psychological (knowledge, emotional readiness) and Physical (skills) capability. 
+                - Opportunity (O): Assess both Physical (time, resources, environment) and Social (norms, relationship dynamics, external pressure) opportunity.
+                - Motivation (M): Assess both Reflective (logical goals, planning) and Automatic (emotional reward, desires, fears) motivation.
+                
+                REALITY CHECK RULE: If the Context shows that resources (O) and skills (C) are fully provided, but the behavior still fails or is resisted, you MUST explicitly diagnose that Motivation (M) is the root failure. Do not hallucinate external factors.
+                
+                Return valid JSON ONLY: { "c_score": X, "c_note": "...", "o_score": X, "o_note": "...", "m_score": X, "m_note": "..." }
+            `;
+                const res = await callGemini(prompt, "You are a JSON generator. Analyze connectivity between nodes. Write all text inside the JSON values strictly in the exact same language used in the TARGET NODE.");
                 if (res) {
                     try {
                         const cleanRes = res.replace(/```json/g, '').replace(/```/g, '');
@@ -902,64 +915,80 @@
             };
 
             const aiAnalyzeBehavior = async () => {
-                if (!selectedNodeId) return;
-                const targetNode = nodes.find(n => n.id === selectedNodeId);
-                if (!targetNode) return;
-                setLoadingState({ global: true, node: 'analyze_btn' });
-                const fullContext = getContextString();
-                const isId = lang === 'id';
-                const h1 = isId ? "**🔍 CEK LOGIKA:**" : "**🔍 LOGIC CROSS-CHECK:**";
-                const h2 = isId ? "**👤 PERILAKU:**" : "**👤 BEHAVIOR:**";
-                const prompt = `
-                    FULL PROGRAM CONTEXT:
-                    ${fullContext}
-                    FOCUS NODE: "${targetNode.content}"
-                    Task: specific behavior analysis.
-                    CRITICAL: Don't just analyze the node in isolation. Analyze the LOGIC FLOW.
-                    - Is there a gap between Output and Outcome?
-                    - Are the assumptions valid based on previous nodes?
-                    Output format:
-                    ${h1} (Explain the connection/disconnection with other nodes)
-                    ${h2} (Who needs to do what)
-                `;
-                const res = await callGemini(prompt, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}. Be critical.`);
-                if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), summary: res } }));
-                setLoadingState({ global: false, node: null });
-            };
+            if (!selectedNodeId) return;
+            const targetNode = nodes.find(n => n.id === selectedNodeId);
+            if (!targetNode) return;
+            setLoadingState({ global: true, node: 'analyze_btn' });
+            const fullContext = getContextString();
+            
+            // HAPUS bagian const isId, h1, dan h2 di sini
+            
+            const prompt = `
+            FULL PROGRAM CONTEXT (Macro-Level ToC):
+            ${fullContext}
+            
+            FOCUS NODE TO DIAGNOSE (Micro-Level COM-B Target):
+            "${targetNode.content}"
+            
+            Task: Conduct a brutal "Reality Check" logic analysis on this specific node within the context of the whole chain. 
+            This could be a corporate project, a personal relationship dynamic, or a parenting strategy. Adapt your tone to the context.
+            
+            Analyze the following:
+            1. The Gap: Is there a logical disconnect between the previous step (e.g., Output) and this step (Outcome)? Just because an intervention happened, does it logically force the behavior to change?
+            2. The COM-B Reality: Are we making false assumptions about the subject's Capability, Opportunity, or Motivation? 
+            3. The Hard Truth: If this is a personal dynamic or relationship, point out if the strategy is trying to force Motivation where there is none, or if the environment (Opportunity) is fundamentally broken.
+            
+            Output format:
+            **🔍 [Translate "LOGIC CROSS-CHECK" to the detected language]:** (Explain the logical connection/disconnection clearly and sharply)
+            
+            **👤 [Translate "BEHAVIORAL BOTTLENECK" to the detected language]:** (Identify the exact behavioral bottleneck: Who needs to do what, and why it might fail in reality)
+            `;
+            
+            const res = await callGemini(prompt, "Respond strictly in the exact same language used in the FOCUS NODE content. Be critical.");
+            if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), summary: res } }));
+            setLoadingState({ global: false, node: null });
+        };
 
             const aiSuggestIntervention = async () => {
-                 if (!selectedNodeId) return;
-                 const targetNode = nodes.find(n => n.id === selectedNodeId);
-                 if (!targetNode) return;
-                setLoadingState({ global: true, node: 'intervention_btn' });
-                const d = nodeComb;
-                const fullContext = getContextString();
-                const isId = lang === 'id';
-                const h1 = isId ? "## 🔍 ANALISIS KETERKAITAN (Logic Cross-check)" : "## 🔍 LOGIC ANALYSIS (Cross-check)";
-                const h2 = isId ? "## 💡 REKOMENDASI STRATEGIS" : "## 💡 STRATEGIC RECOMMENDATIONS";
-                const prompt = `
-                    PROGRAM CONTEXT:
-                    ${fullContext}
-                    PROBLEM NODE: "${targetNode.content}"
-                    SCORES: C:${d.capability.score}, O:${d.opportunity.score}, M:${d.motivation.score}
-                    DIAGNOSIS: ${d.summary}
-                    Task: Suggest 3 strategic interventions.
-                    Constraint: 
-                    Do not just suggest "training". Look at the CHAIN. 
-                    - Maybe the "Input" needs to change?
-                    - Maybe the "Activity" is wrong?
-                    Output Format:
-                    ${h1}
-                    (Explain if the failure is due to upstream nodes (Activity/Output) or downstream (Impact))
-                    ${h2}
-                    1. ...
-                    2. ...
-                    3. ...
-                `;
-                const res = await callGemini(prompt, `Respond in ${isId ? 'Indonesian' : 'English'}.`);
-                if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), intervention: res } }));
-                setLoadingState({ global: false, node: null });
-            };
+            if (!selectedNodeId) return;
+            const targetNode = nodes.find(n => n.id === selectedNodeId);
+            if (!targetNode) return;
+            setLoadingState({ global: true, node: 'intervention_btn' });
+            const d = nodeComb;
+            const fullContext = getContextString();
+            
+            // HAPUS bagian const isId, h1, dan h2 di sini
+
+            const prompt = `
+            PROGRAM CONTEXT:
+            ${fullContext}
+            
+            PROBLEM NODE: "${targetNode.content}"
+            DIAGNOSED SCORES: C:${d.capability.score}, O:${d.opportunity.score}, M:${d.motivation.score}
+            DIAGNOSIS: ${d.summary}
+            
+            Task: Suggest 3 precise, highly logical interventions based on the COM-B diagnosis.
+            
+            Constraints:
+            - Avoid generic advice (e.g., "communicate better", "provide training").
+            - If the context is parenting, focus on environmental design (Opportunity) or emotional framing (Motivation).
+            - If the context is interpersonal/relationships and Motivation is consistently low despite high Opportunity, one of the valid strategic interventions MUST be to "withdraw, cut losses, or stop the intervention" because you cannot manufacture motivation from zero.
+            - Look UPSTREAM: If the issue is a lack of Input/Resources, suggest fixing the Input, not pushing the Outcome.
+            
+            Output Format:
+            ## 🔍 [Translate "STRATEGIC PIVOT" to the detected language]
+            (A brief, hard-hitting summary of the strategic pivot needed)
+            
+            ## 💡 [Translate "RECOMMENDATIONS" to the detected language]
+            1. [Focus Area - e.g., Restructure Opportunity]: ...
+            2. [Focus Area - e.g., Reframe Motivation]: ...
+            3. [Alternative/Exit Strategy]: ...
+            `;
+            
+            const res = await callGemini(prompt, "Respond strictly in the exact same language used in the PROBLEM NODE. Ensure all recommendations match this language.");
+            if(res) setCombData(prev => ({ ...prev, [selectedNodeId]: { ...(prev[selectedNodeId] || getInitialComb()), intervention: res } }));
+            setLoadingState({ global: false, node: null });
+        };
 
             const generateAverageChartImage = (scores) => {
                 return new Promise((resolve) => {
@@ -1015,15 +1044,15 @@
                 setLoadingState({ global: true, node: 'export', status: 'Writing comprehensive analysis (AI)...' });
                 const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
                 const aiReport = await callGemini(`
-                    Review this Theory of Change: ${tocText}.
-                    Project Title: ${projectTitle}.
-                    Write a comprehensive strategic report including:
-                    1. Executive Summary
-                    2. Logic Flow Analysis
-                    3. Behavioral Risk Assessment
-                    4. Strategic Recommendations.
-                    Use Markdown.
-                `, `Respond in ${lang === 'id' ? 'Indonesian' : 'English'}. Professional consultant tone.`);
+                Review this Theory of Change: ${tocText}.
+                Project Title: ${projectTitle}.
+                Write a comprehensive strategic report including:
+                1. Executive Summary
+                2. Logic Flow Analysis
+                3. Behavioral Risk Assessment
+                4. Strategic Recommendations.
+                Use Markdown.
+            `, "Detect the dominant language used in the Theory of Change text. Write the ENTIRE report strictly in that detected language (e.g., if the text is French, write the report in French). Professional consultant tone.");
                 setLoadingState({ global: true, node: 'export', status: 'Finalizing PDF Layout...' });
                 const w = window.open('', '_blank');
                 const layers = ['impact', 'outcome', 'output', 'activity', 'input'];
@@ -1082,7 +1111,7 @@
                          if (!n) return '';
                          return `
                             <div class="com-b-entry">
-                                <div class="com-b-header">Target Behavior: ${n.content}</div>
+                                <div class="com-b-header">Target Behavior: ${marked.parseInline(n.content || '')}</div>
                                 <div class="com-b-grid">
                                     <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
                                         <h4>🔍 DIAGNOSIS (Root Cause)</h4>
