@@ -135,6 +135,13 @@
         textarea.no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -867,6 +874,7 @@ const GuideModal = ({ onClose }) => (
             const [toastMessage, setToastMessage] = useState(null);
             // ---> TAMBAHKAN BARIS INI:
             const [showGuideModal, setShowGuideModal] = useState(false);
+            const sidebarRef = useRef(null);
             
             const [nodes, setNodes] = useState([]);
             const [projectTitle, setProjectTitle] = useState("");
@@ -1045,6 +1053,84 @@ const GuideModal = ({ onClose }) => (
                 };
                 reader.readAsText(file);
             };
+
+
+const ConnectionLine = ({ sourceId, targetRef }) => {
+    const [pathD, setPathD] = useState('');
+
+    const updateLine = () => {
+        if (!sourceId || !targetRef.current) {
+            setPathD('');
+            return;
+        }
+
+        const sourceEl = document.getElementById(`node-${sourceId}`);
+        if (!sourceEl) {
+            setPathD('');
+            return;
+        }
+
+        const sourceRect = sourceEl.getBoundingClientRect();
+        const targetRect = targetRef.current.getBoundingClientRect();
+
+        const startX = sourceRect.right;
+        const startY = sourceRect.top + (sourceRect.height / 2);
+
+        const endX = targetRect.left;
+        const endY = targetRect.top + 100;
+
+        // Logic bezier curve agar garis terlihat melar dan elastis seperti karet
+        const controlPointDistance = Math.max(Math.abs(endX - startX) * 0.5, 50);
+        
+        const d = `M ${startX} ${startY} C ${startX + controlPointDistance} ${startY}, ${endX - controlPointDistance} ${endY}, ${endX} ${endY}`;
+        setPathD(d);
+    };
+
+    useLayoutEffect(() => {
+        updateLine();
+        window.addEventListener('resize', updateLine);
+        window.addEventListener('scroll', updateLine, true); 
+        
+        return () => {
+            window.removeEventListener('resize', updateLine);
+            window.removeEventListener('scroll', updateLine, true);
+        };
+    }, [sourceId, targetRef]);
+
+    if (!pathD) return null;
+
+    return (
+        <svg className="fixed inset-0 w-full h-full pointer-events-none z-[25]" style={{ overflow: 'visible' }}>
+            <defs>
+                {/* Efek tali glowing biru */}
+                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#3b82f6" /> 
+                    <stop offset="100%" stopColor="#60a5fa" /> 
+                </linearGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <path
+                d={pathD}
+                fill="none"
+                stroke="url(#glowGradient)"
+                strokeWidth="3"
+                filter="url(#glow)"
+                className="animate-fade-in"
+                style={{
+                    strokeDasharray: '8 8',
+                    animation: 'dash 15s linear infinite'
+                }}
+            />
+        </svg>
+    );
+};
+
 
              // AI INTEGRATION
             const callGemini = async (prompt, systemInstruction = "") => {
@@ -1539,6 +1625,9 @@ const GuideModal = ({ onClose }) => (
                     {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
                     {showGuideModal && <GuideModal onClose={() => setShowGuideModal(false)} />}
 
+                        {/* Add the connection line here */}
+                    <ConnectionLine sourceId={selectedNodeId} targetRef={sidebarRef} />
+
                     <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-50 relative shadow-sm">
                         <div className="flex items-center gap-4">
                             <button onClick={() => setMode(null)} className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white hover:bg-slate-700 transition-colors"><i className="fa-solid fa-home"></i></button>
@@ -1626,7 +1715,7 @@ const GuideModal = ({ onClose }) => (
                                                     </div>
                                                     <div className="flex flex-col items-center gap-4 w-full">
                                                         {layerNodes.map(node => (
-                                                            <div key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full max-w-3xl ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
+                                                            <div id={`node-${node.id}`} key={node.id} onClick={() => handleNodeClick(node.id)} className={`node-card group relative bg-white rounded-xl border p-6 cursor-pointer w-full max-w-3xl ${selectedNodeId === node.id ? 'border-blue-500 ring-4 ring-blue-500/10' : 'border-slate-200'} ${node.risk === 'critical' ? 'border-l-4 border-l-red-500' : ''}`}>
                                                                 
                                                                 {/* Magic Wand for Text */}
                                                                 <button onClick={(e) => { e.stopPropagation(); aiFillNode(node.id, node.type, node.content); }} className={`absolute top-2 right-2 w-6 h-6 rounded flex items-center justify-center text-slate-300 hover:text-purple-500 hover:bg-purple-50 transition-colors z-10 ${tourStep === 2 ? 'bg-amber-100 text-amber-500 animate-bounce-slow shadow-lg ring-2 ring-amber-400' : ''}`} title={t.magic_hint}>
@@ -1686,8 +1775,8 @@ const GuideModal = ({ onClose }) => (
                                 </div>
                             </div>
                         </div>
-
-                        <div className={`w-[400px] bg-white border-l border-slate-200 flex flex-col shadow-2xl z-30 transition-transform duration-300 ${!selectedNode ? 'translate-x-full absolute right-0 h-full' : 'translate-x-0 relative'} ${tourStep === 3 ? 'tour-highlight' : ''}`}>
+                        
+                        <div ref={sidebarRef} className={`w-[400px] bg-white border-l border-slate-200 flex flex-col shadow-2xl z-30 transition-transform duration-300 ${!selectedNode ? 'translate-x-full absolute right-0 h-full' : 'translate-x-0 relative'} ${tourStep === 3 ? 'tour-highlight' : ''}`}>
                             {selectedNode ? (
                                 <>
                                     <div className="h-14 border-b border-slate-100 flex items-center justify-between px-6 bg-slate-50">
