@@ -535,6 +535,8 @@
             </div>
         );
 
+        
+
         const TutorialCard = ({ scenario, lang, onStart }) => {
             const t = TRANSLATIONS[lang];
             const learningPoints = scenario.learningPoints[lang];
@@ -582,6 +584,214 @@
             </div>
         );
 
+const GuideModal = ({ onClose }) => (
+            <div className="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-sm flex justify-center items-center p-4 sm:p-6 animate-fade-in">
+                <div className="bg-white rounded-2xl w-full max-w-4xl max-h-full flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+                    
+                    {/* Header Modal */}
+                    <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50 shrink-0">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+                                <i className="fa-solid fa-book-open-reader"></i>
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-800 tracking-tight">The ImpactArchitect Guide</h2>
+                                <p className="text-xs text-slate-500 font-medium">Mastering the Theory of Change & COM-B Framework</p>
+                            </div>
+                        </div>
+                        <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-500 hover:bg-slate-300 hover:text-slate-800 transition-colors">
+                            <i className="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+
+                    {/* Content Scrollable Area */}
+                    <div className="overflow-y-auto p-6 sm:p-10 custom-scrollbar text-slate-700 space-y-10">
+                        
+                        {/* Section 0: How to Use This App */}
+                        <section>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-indigo-500 inline-block pb-1">
+                            0. How to Use This App
+                        </h3>
+                        <div className="bg-indigo-50 border border-indigo-200 p-6 rounded-xl shadow-sm">
+                            <ol className="text-sm space-y-3 list-decimal list-inside text-indigo-900">
+                            <li>
+                                <strong>Start with Impact:</strong> Define the ultimate future state you want to create.
+                            </li>
+                            <li>
+                                <strong>Map Outcomes:</strong> Identify observable behaviors that must exist before that impact becomes reality.
+                            </li>
+                            <li>
+                                <strong>Run a COM-B Diagnosis:</strong> Ask why the behavior has not happened yet.
+                            </li>
+                            <li>
+                                <strong>Design Interventions:</strong> Only design activities after diagnosing Capability, Opportunity, and Motivation gaps.
+                            </li>
+                            <li>
+                                <strong>Stress-Test Logic:</strong> If any COM-B variable is zero, your intervention will fail.
+                            </li>
+                            </ol>
+                        </div>
+                        </section>
+
+                        {/* Section 1: Intro & Reverse Engineering */}
+                        <section>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-blue-500 inline-block pb-1">1. The Core Concept: Reverse Engineering Success</h3>
+                            <p className="leading-relaxed mb-4 text-sm sm:text-base">
+                                At its core, a <strong>Theory of Change (ToC)</strong> is a highly logical roadmap. It is a methodology used to map out exactly <em>how</em> and <em>why</em> a desired change is expected to happen in a particular context. 
+                            </p>
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg shadow-sm">
+                                <h4 className="font-bold text-blue-900 flex items-center gap-2 mb-2"><i className="fa-solid fa-backward"></i> The "Backward Mapping" Principle</h4>
+                                <p className="text-sm text-blue-800 leading-relaxed">
+                                    ToC always works in reverse. You do not start with what you want to do. You start with the ultimate goal (<strong>Impact</strong>), then take a step backward to define the conditions that must exist to reach that goal (<strong>Outcomes</strong>), and finally, determine the interventions (<strong>Outputs/Activities</strong>) required to create those conditions.
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* Section 2: ToC vs COM-B */}
+                        <section>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-purple-500 inline-block pb-1">2. Why does ToC need COM-B?</h3>
+                            <p className="leading-relaxed mb-6 text-sm sm:text-base">
+                                If ToC is the <em>roadmap</em> (macro-level), then COM-B is the <em>engine</em> (micro-level). ToC often has a fatal flaw: it assumes human beings will automatically change their behavior simply because an intervention is provided. COM-B exists to plug that hole.
+                            </p>
+                            
+                            <div className="overflow-x-auto rounded-lg border border-slate-200 shadow-sm">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-100 text-slate-800">
+                                            <th className="p-4 border-b border-slate-200 font-bold w-1/2">Theory of Change (ToC)</th>
+                                            <th className="p-4 border-b border-slate-200 font-bold w-1/2">COM-B Framework</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-sm">
+                                        <tr>
+                                            <td className="p-4 border-b border-slate-100 align-top bg-white">Identifies <strong>WHAT</strong> behavior needs to change to achieve the ultimate impact.</td>
+                                            <td className="p-4 border-b border-slate-100 align-top bg-purple-50">Diagnoses <strong>WHY</strong> that behavior hasn't happened yet.</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="p-4 border-b border-slate-100 align-top bg-white">Focuses on structural logic (If A, then B).</td>
+                                            <td className="p-4 border-b border-slate-100 align-top bg-purple-50">Focuses on psychological & physical barriers.</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="p-4 align-top bg-white">Assumes the target audience is ready.</td>
+                                            <td className="p-4 align-top bg-purple-50">Verifies <strong>Capability</strong>, <strong>Opportunity</strong>, and <strong>Motivation</strong> to ensure the ToC step actually executes.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+
+                        {/* Section: Common Mistakes */}
+                        <section>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-red-500 inline-block pb-1">
+                            3. Common Strategic Mistakes
+                        </h3>
+
+                        <div className="bg-red-50 border border-red-200 p-6 rounded-xl shadow-sm text-sm space-y-4 text-red-900">
+                            <div>
+                            <strong>❌ Mistake 1: Activity First Thinking</strong>
+                            <p>Designing workshops or campaigns before defining Impact and Outcomes.</p>
+                            </div>
+                            <div>
+                            <strong>❌ Mistake 2: Assuming Motivation</strong>
+                            <p>Believing people will change just because information is provided.</p>
+                            </div>
+                            <div>
+                            <strong>❌ Mistake 3: Ignoring Opportunity Constraints</strong>
+                            <p>Expecting behavioral change without environmental redesign.</p>
+                            </div>
+                        </div>
+                        </section>
+
+                        {/* Section 3: Beyond Projects */}
+                        <section>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4 border-b-2 border-emerald-500 inline-block pb-1">3. Is it only for NGO or Corporate Projects?</h3>
+                            <p className="leading-relaxed mb-4 text-sm sm:text-base">
+                                Absolutely not. While it originated in philanthropy and governance, ToC is fundamentally a <strong>cognitive framework</strong>. As long as there is a "current state" and an "ideal future state," ToC can be applied. For output-heavy thinkers, it is a brilliant tool to dissect complex, emotional, or overwhelming problems into actionable logic.
+                            </p>
+
+                            <div className="grid md:grid-cols-2 gap-6 mt-6">
+                                {/* Parenting Box */}
+                                <div className="bg-emerald-50 border border-emerald-200 p-6 rounded-xl shadow-sm">
+                                    <h4 className="font-bold text-emerald-800 text-lg mb-3 flex items-center gap-2"><i className="fa-solid fa-child-reaching"></i> Educational Planning</h4>
+                                    <p className="text-sm text-emerald-700 mb-4">Highly recommended. It helps avoid "reactive parenting" by designing environments proactively.</p>
+                                    <ul className="text-sm space-y-2 text-emerald-800">
+                                        <li><span className="font-bold">Impact:</span> Child becomes a critical, independent learner.</li>
+                                        <li><span className="font-bold">Outcome:</span> Child reads books unprompted.</li>
+                                        <li><span className="font-bold border-b border-emerald-300">COM-B Diagnosis:</span>
+                                            <ul className="ml-4 mt-1 space-y-1 list-disc">
+                                                <li><strong>C:</strong> They know how to spell.</li>
+                                                <li><strong>O:</strong> The environment must allow it.</li>
+                                                <li><strong>M:</strong> Reading must feel fun, not like a chore.</li>
+                                            </ul>
+                                        </li>
+                                        <li><span className="font-bold border-b border-emerald-300">Your Interventions:</span>
+                                            <ul className="ml-4 mt-1 space-y-1 list-disc">
+                                                <li>Place a short bookshelf at their eye level (<em>Opportunity</em>).</li>
+                                                <li>15 mins of animated bedtime stories (<em>Motivation</em>).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                {/* Romance Box */}
+                                <div className="bg-rose-50 border border-rose-200 p-6 rounded-xl shadow-sm">
+                                    <h4 className="font-bold text-rose-800 text-lg mb-3 flex items-center gap-2"><i className="fa-solid fa-heart-pulse"></i> Romantic Relationships</h4>
+                                    <p className="text-sm text-rose-700 mb-4">Technically possible, but requires extreme caution. Humans are not always rational.</p>
+                                    <ul className="text-sm space-y-2 text-rose-800 mb-4">
+                                        <li><span className="font-bold">Impact:</span> Stable, long-term romantic relationship.</li>
+                                        <li><span className="font-bold">Outcome:</span> Comfortable, two-way communication.</li>
+                                        <li><span className="font-bold border-b border-rose-300">COM-B Reality Check:</span>
+                                            <ul className="ml-4 mt-1 space-y-1 list-disc">
+                                                <li><strong>Opportunity:</strong> Do they actually have the emotional space/time for a new relationship?</li>
+                                                <li><strong>Motivation:</strong> Does interacting with you provide them with emotional reward?</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <div className="bg-white/60 p-3 rounded border border-rose-300 text-xs text-rose-900 font-medium">
+                                        <strong>⚠️ Warning:</strong> Use this to evaluate <em>your own</em> strategy, not to "program" their feelings. If their Motivation (M) is zero, the most perfect project plan cannot change it. Walk away.
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                          {/* Section: Behavioral Reality Check */}
+                            <section>
+                            <div className="bg-slate-900 text-white p-6 rounded-xl shadow-xl">
+                                <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                                <i className="fa-solid fa-triangle-exclamation"></i>
+                                Behavioral Reality Check
+                                </h4>
+                                <p className="text-sm leading-relaxed">
+                                If Capability = 0, skill training is required.  
+                                If Opportunity = 0, environmental redesign is required.  
+                                If Motivation = 0, emotional or incentive redesign is required.  
+                                <br /><br />
+                                If all three are misaligned, no amount of activities will produce change.
+                                </p>
+                            </div>
+                            </section>
+                    </div>
+
+                    {/* Footer / CTA */}
+                    <div className="p-6 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0">
+                        <div className="text-sm text-slate-500 font-medium">
+                            Want to dive deeper into the philosophy?
+                        </div>
+                        <a 
+                            href="https://www.linkedin.com/pulse/why-does-toc-need-com-b-theory-change-canvas-angga-conni-saputra-bhnwc" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 bg-[#0A66C2] hover:bg-[#004182] text-white px-6 py-3 rounded-lg font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5"
+                        >
+                            <i className="fa-brands fa-linkedin text-lg"></i> Read Full Article on LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        );
+
+
         // --- MAIN APPLICATION ---
         function App() {
             const [lang, setLang] = useState('en');
@@ -591,6 +801,8 @@
             const [tourStep, setTourStep] = useState(-1);
             const [showArcadeModal, setShowArcadeModal] = useState(false);
             const [toastMessage, setToastMessage] = useState(null);
+            // ---> TAMBAHKAN BARIS INI:
+            const [showGuideModal, setShowGuideModal] = useState(false);
             
             const [nodes, setNodes] = useState([]);
             const [projectTitle, setProjectTitle] = useState("");
@@ -1261,6 +1473,7 @@
                     {showArcadeModal && <ArcadeModal onClose={() => setShowArcadeModal(false)} t={t} />}
                     {isTutorial && tourStep >= 0 && <TourOverlay step={tourStep} t={t} onNext={() => setTourStep(prev => prev >= 4 ? -1 : prev + 1)} onSkip={() => setTourStep(-1)} />}
                     {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
+                    {showGuideModal && <GuideModal onClose={() => setShowGuideModal(false)} />}
 
                     <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-50 relative shadow-sm">
                         <div className="flex items-center gap-4">
@@ -1274,6 +1487,9 @@
                                 </div>
                             </div>
                         </div>
+
+
+
                         <div className={`flex-1 max-w-md mx-6 ${tourStep === 0 ? 'tour-highlight' : ''}`}>
                             <div className={`flex items-center gap-3 bg-slate-50 border transition-colors rounded-lg px-3 py-1.5 ${apiKey ? 'border-emerald-500/50 bg-emerald-50/30' : 'border-slate-200 focus-within:border-blue-500'}`}>
                                 <div className={`status-dot shrink-0 ${apiKey ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-300'}`} title={apiKey ? t.api_connected : t.api_disconnected}></div>
@@ -1282,6 +1498,16 @@
                             <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-[10px] text-blue-500 hover:text-blue-700 font-medium ml-1 mt-1 block flex items-center gap-1"><i className="fa-solid fa-external-link-alt"></i> {t.get_api_key}</a>
                         </div>
                         <div className={`flex items-center gap-3 ${tourStep === 4 ? 'tour-highlight' : ''}`}>
+                            
+                            {/* ---> TOMBOL GUIDE BARU <--- */}
+                            <button 
+                                onClick={() => setShowGuideModal(true)} 
+                                className="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 hover:text-blue-700 transition-all shadow-sm"
+                                title="Open Comprehensive Guide"
+                            >
+                                <i className="fa-solid fa-book-open-reader"></i> Guide
+                            </button>
+
                             <button onClick={aiAutoCompleteAll} disabled={loadingState.global} className={`flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 ${loadingState.global ? 'opacity-70 cursor-wait' : ''}`}>
                                 {loadingState.global ? <i className="fa-solid fa-circle-notch fa-spin"></i> : <i className="fa-solid fa-wand-magic-sparkles text-purple-400"></i>}
                                 {t.btn_auto_complete}
