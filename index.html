@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImpactArchitect v3.3 - AI Assisted COM-B Diagnosis</title>
     
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3Ecircle, line { stroke: black; fill: black; } @media (prefers-color-scheme: dark) { circle, line { stroke: white; fill: white; } }%3C/style%3E%3Ccircle cx='20' cy='20' r='8'/%3E%3Ccircle cx='80' cy='20' r='8'/%3E%3Ccircle cx='50' cy='80' r='8'/%3E%3Ccircle cx='50' cy='50' r='6'/%3E%3Cline x1='28' y1='28' x2='44' y2='44' stroke-width='4'/%3E%3Cline x1='72' y1='28' x2='56' y2='44' stroke-width='4'/%3E%3Cline x1='50' y1='72' x2='50' y2='56' stroke-width='4'/%3E%3C/svg%3E">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -1025,123 +1027,142 @@
             };
 
             const exportReport = async () => {
-                if(!apiKey) { setShowArcadeModal(true); return; }
-                setLoadingState({ global: true, node: 'export', status: 'Calculating behavioral averages...' });
-                let totalC = 0, totalO = 0, totalM = 0, count = 0;
-                Object.values(combData).forEach(d => {
-                    if(d.capability && d.opportunity && d.motivation) {
-                        totalC += parseInt(d.capability.score || 0);
-                        totalO += parseInt(d.opportunity.score || 0);
-                        totalM += parseInt(d.motivation.score || 0);
-                        count++;
-                    }
-                });
-                let avgImage = null;
-                if (count > 0 && exportChartRef.current) {
-                    setLoadingState({ global: true, node: 'export', status: 'Generating Average Radar Chart...' });
-                    avgImage = await generateAverageChartImage([totalC/count, totalO/count, totalM/count]);
-                }
-                setLoadingState({ global: true, node: 'export', status: 'Writing comprehensive analysis (AI)...' });
-                const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
-                const aiReport = await callGemini(`
-                Review this Theory of Change: ${tocText}.
-                Project Title: ${projectTitle}.
-                Write a comprehensive strategic report including:
-                1. Executive Summary
-                2. Logic Flow Analysis
-                3. Behavioral Risk Assessment
-                4. Strategic Recommendations.
-                Use Markdown.
-            `, "Detect the dominant language used in the Theory of Change text. Write the ENTIRE report strictly in that detected language (e.g., if the text is French, write the report in French). Professional consultant tone.");
-                setLoadingState({ global: true, node: 'export', status: 'Finalizing PDF Layout...' });
-                const w = window.open('', '_blank');
-                const layers = ['impact', 'outcome', 'output', 'activity', 'input'];
-                const sortedDiagramHtml = layers.map((layer, index) => {
-                   const layerNodes = nodes.filter(n => n.type === layer);
-                   if (layerNodes.length === 0) return '';
-                   return layerNodes.map(n => `
-                        <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
-                            <span class="badge" style="color: ${layer === 'input' ? '#7c3aed' : ''}">${n.type}</span>
-                            <strong>${n.content}</strong>
-                        </div>
-                   `).join('') + (index < layers.length - 1 && layerNodes.length > 0 ? '<div class="arrow">↓</div>' : '');
-                }).join('');
-                const html = `
-                    <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 900px; margin: 0 auto; line-height: 1.6; }
-                        h1 { color: #0f172a; border-bottom: 3px solid #0ea5e9; padding-bottom: 15px; margin-bottom: 20px; font-size: 28px; }
-                        h2 { color: #0ea5e9; margin-top: 40px; font-size: 20px; border-left: 5px solid #0ea5e9; padding-left: 15px; background: #f0f9ff; padding-top: 10px; padding-bottom: 10px; border-radius: 0 8px 8px 0; }
-                        h3 { color: #334155; font-size: 16px; margin-top: 20px; font-weight: 700; }
-                        .diagram-container { background: #f8fafc; padding: 30px; border: 1px solid #e2e8f0; border-radius: 12px; margin: 20px 0; text-align: center; }
-                        .node-box { 
-                            padding: 15px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; 
-                            margin: 15px auto; width: 80%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: left; position: relative;
-                        }
-                        .arrow { color: #cbd5e1; font-size: 24px; margin: 10px 0; }
-                        .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
-                        .risk-high { border-left: 5px solid #f97316; } .risk-critical { border-left: 5px solid #ef4444; }
-                        .ai-content { background: #fff; padding: 20px; border-radius: 8px; font-size: 14px; text-align: justify; }
-                        .radar-snapshot { float: right; width: 320px; margin: 0 0 20px 30px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
-                        .com-b-entry { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 30px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); page-break-inside: avoid; }
-                        .com-b-header { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
-                        .com-b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-                        .com-b-section h4 { font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
-                        .com-b-section p, .com-b-section ul { font-size: 13px; color: #334155; line-height: 1.5; margin: 0; }
-                        .com-b-section ul { padding-left: 20px; }
-                        .score-summary { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
-                        .score-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #f1f5f9; color: #475569; }
-                        .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; }
-                    </style>
+            if(!apiKey) { setShowArcadeModal(true); return; }
+
+            // 1. BUKA TAB BARU LANGSUNG SAAT KLIK (Anti-Blokir Browser)
+            const w = window.open('', '_blank');
+            if (w) {
+                // Tampilkan layar tunggu di tab baru
+                w.document.write(`
+                    <html><head><title>Generating Report...</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+                    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f8fafc; color: #334155; flex-direction: column; text-align: center; }</style>
                     </head><body>
-                    <h1>${projectTitle || 'Strategic Report'}</h1>
-                    <p style="color: #64748b; font-size: 14px;"><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                    <h2>1. Diagram Alur (Theory of Change)</h2>
-                    <div class="diagram-container">${sortedDiagramHtml}</div>
-                    <h2>2. Strategic Analysis (Executive Summary)</h2>
-                    <div class="ai-content">
-                        ${avgImage ? `<img src="${avgImage}" class="radar-snapshot" />` : ''}
-                        ${marked.parse(aiReport || 'Analysis unavailable.')}
-                        <div style="clear: both;"></div>
+                    <h2>⚙️ AI work on your report...</h2>
+                    <p>Please kindly wait, do not close this tab.</p>
+                    </body></html>
+                `);
+            } else {
+                alert("Browser blocking new Tab. Please Allow Pop-ups, for this site.");
+                return;
+            }
+
+            setLoadingState({ global: true, node: 'export', status: 'Calculating behavioral averages...' });
+            let totalC = 0, totalO = 0, totalM = 0, count = 0;
+            Object.values(combData).forEach(d => {
+                if(d.capability && d.opportunity && d.motivation) {
+                    totalC += parseInt(d.capability.score || 0);
+                    totalO += parseInt(d.opportunity.score || 0);
+                    totalM += parseInt(d.motivation.score || 0);
+                    count++;
+                }
+            });
+            let avgImage = null;
+            if (count > 0 && exportChartRef.current) {
+                setLoadingState({ global: true, node: 'export', status: 'Generating Average Radar Chart...' });
+                avgImage = await generateAverageChartImage([totalC/count, totalO/count, totalM/count]);
+            }
+            
+            setLoadingState({ global: true, node: 'export', status: 'Writing comprehensive analysis (AI)...' });
+            const tocText = nodes.map(n => `[${n.type}] ${n.content}`).join(' -> ');
+            const aiReport = await callGemini(`
+            Review this Theory of Change: ${tocText}.
+            Project Title: ${projectTitle}.
+            Write a comprehensive strategic report including:
+            1. Executive Summary
+            2. Logic Flow Analysis
+            3. Behavioral Risk Assessment
+            4. Strategic Recommendations.
+            Use Markdown.
+        `, "Detect the dominant language used in the Theory of Change text. Write the ENTIRE report strictly in that detected language (e.g., if the text is French, write the report in French). Professional consultant tone.");
+            
+            setLoadingState({ global: true, node: 'export', status: 'Finalizing PDF Layout...' });
+            
+            const layers = ['impact', 'outcome', 'output', 'activity', 'input'];
+            const sortedDiagramHtml = layers.map((layer, index) => {
+                const layerNodes = nodes.filter(n => n.type === layer);
+                if (layerNodes.length === 0) return '';
+                return layerNodes.map(n => `
+                    <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
+                        <span class="badge" style="color: ${layer === 'input' ? '#7c3aed' : ''}">${n.type}</span>
+                        <strong>${n.content}</strong>
                     </div>
-                    <h2>3. Detailed Behavioral Register (Diagnosis)</h2>
-                    ${Object.entries(combData).map(([k,v]) => {
-                         const n = nodes.find(x=>x.id===k);
-                         if (!n) return '';
-                         return `
-                            <div class="com-b-entry">
-                                <div class="com-b-header">Target Behavior: ${marked.parseInline(n.content || '')}</div>
-                                <div class="com-b-grid">
-                                    <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
-                                        <h4>🔍 DIAGNOSIS (Root Cause)</h4>
-                                        ${marked.parse(v.summary || 'No diagnosis recorded.')}
-                                    </div>
-                                    <div class="com-b-section" style="background: #f0fdf4; padding: 15px; border-radius: 8px;">
-                                        <h4>💡 INTERVENTION STRATEGY</h4>
-                                        ${marked.parse(v.intervention || 'No intervention recorded.')}
-                                    </div>
+                `).join('') + (index < layers.length - 1 && layerNodes.length > 0 ? '<div class="arrow">↓</div>' : '');
+            }).join('');
+
+            const html = `
+                <html><head><title>ImpactArchitect Report: ${projectTitle}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                <style>
+                    body { font-family: 'Plus Jakarta Sans', sans-serif; padding: 40px; color: #1e293b; max-width: 900px; margin: 0 auto; line-height: 1.6; }
+                    h1 { color: #0f172a; border-bottom: 3px solid #0ea5e9; padding-bottom: 15px; margin-bottom: 20px; font-size: 28px; }
+                    h2 { color: #0ea5e9; margin-top: 40px; font-size: 20px; border-left: 5px solid #0ea5e9; padding-left: 15px; background: #f0f9ff; padding-top: 10px; padding-bottom: 10px; border-radius: 0 8px 8px 0; }
+                    h3 { color: #334155; font-size: 16px; margin-top: 20px; font-weight: 700; }
+                    .diagram-container { background: #f8fafc; padding: 30px; border: 1px solid #e2e8f0; border-radius: 12px; margin: 20px 0; text-align: center; }
+                    .node-box { padding: 15px 20px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; margin: 15px auto; width: 80%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); text-align: left; position: relative; }
+                    .arrow { color: #cbd5e1; font-size: 24px; margin: 10px 0; }
+                    .badge { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block; letter-spacing: 0.05em; }
+                    .risk-high { border-left: 5px solid #f97316; } .risk-critical { border-left: 5px solid #ef4444; }
+                    .ai-content { background: #fff; padding: 20px; border-radius: 8px; font-size: 14px; text-align: justify; }
+                    .radar-snapshot { float: right; width: 320px; margin: 0 0 20px 30px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+                    .com-b-entry { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 30px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); page-break-inside: avoid; }
+                    .com-b-header { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+                    .com-b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                    .com-b-section h4 { font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+                    .com-b-section p, .com-b-section ul { font-size: 13px; color: #334155; line-height: 1.5; margin: 0; }
+                    .com-b-section ul { padding-left: 20px; }
+                    .score-summary { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
+                    .score-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #f1f5f9; color: #475569; }
+                    .footer { margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; font-size: 12px; color: #94a3b8; text-align: center; }
+                </style>
+                </head><body>
+                <h1>${projectTitle || 'Strategic Report'}</h1>
+                <p style="color: #64748b; font-size: 14px;"><strong>Generated by:</strong> ImpactArchitect AI | <strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                <h2>1. Diagram Alur (Theory of Change)</h2>
+                <div class="diagram-container">${sortedDiagramHtml}</div>
+                <h2>2. Strategic Analysis (Executive Summary)</h2>
+                <div class="ai-content">
+                    ${avgImage ? `<img src="${avgImage}" class="radar-snapshot" />` : ''}
+                    ${marked.parse(aiReport || 'Analysis unavailable.')}
+                    <div style="clear: both;"></div>
+                </div>
+                <h2>3. Detailed Behavioral Register (Diagnosis)</h2>
+                ${Object.entries(combData).map(([k,v]) => {
+                        const n = nodes.find(x=>x.id===k);
+                        if (!n) return '';
+                        return `
+                        <div class="com-b-entry">
+                            <div class="com-b-header">Target Behavior: ${marked.parseInline(n.content || '')}</div>
+                            <div class="com-b-grid">
+                                <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
+                                    <h4>🔍 DIAGNOSIS (Root Cause)</h4>
+                                    ${marked.parse(v.summary || 'No diagnosis recorded.')}
                                 </div>
-                                <div class="score-summary">
-                                    <span class="score-pill">Capability: ${v.capability.score}/10</span>
-                                    <span class="score-pill">Opportunity: ${v.opportunity.score}/10</span>
-                                    <span class="score-pill">Motivation: ${v.motivation.score}/10</span>
+                                <div class="com-b-section" style="background: #f0fdf4; padding: 15px; border-radius: 8px;">
+                                    <h4>💡 INTERVENTION STRATEGY</h4>
+                                    ${marked.parse(v.intervention || 'No intervention recorded.')}
                                 </div>
                             </div>
-                         `;
-                    }).join('')}
-                    <div class="footer">Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3</div>
-                    <script>window.print()<\/script></body></html>
-                `;
-                if (w) {
-                    w.document.open();
-                    w.document.write(html);
-                    w.document.close();
-                } else {
-                    alert("Please allow popups to view the report.");
-                }
-                setLoadingState({ global: false, node: null, status: '' });
-            };
+                            <div class="score-summary">
+                                <span class="score-pill">Capability: ${v.capability.score}/10</span>
+                                <span class="score-pill">Opportunity: ${v.opportunity.score}/10</span>
+                                <span class="score-pill">Motivation: ${v.motivation.score}/10</span>
+                            </div>
+                        </div>
+                        `;
+                }).join('')}
+                <div class="footer">Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3</div>
+                <script>window.print()<\/script></body></html>
+            `;
+
+            // 2. TIMPA KONTEN TAB TUNGGU DENGAN HASIL AI YANG SUDAH JADI
+            if (w) {
+                w.document.open();
+                w.document.write(html);
+                w.document.close();
+            }
+            setLoadingState({ global: false, node: null, status: '' });
+        };
 
             // --- RENDER ---
             if (!mode) return (
