@@ -4,7 +4,7 @@ const path = require('path');
 // ==========================================
 // CONFIGURATION
 // ==========================================
-const SITE_URL = 'https://yourdomain.com'; // Change this to your actual domain
+const SITE_URL = 'https://anggaconni.github.io/TheoryofChange_COM-B'; // Change this to your actual domain
 const dataPath = path.join(__dirname, '../blog/data.json');
 const blogIndexPath = path.join(__dirname, '../blog.html');
 const articlesDir = path.join(__dirname, '../blog/article');
