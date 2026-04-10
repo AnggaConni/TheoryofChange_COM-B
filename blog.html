@@ -4,43 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strategic Insights | Horizon Scan AI</title>
+    <title>Articles & Guides | ImpactArchitect</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans:['"Plus Jakarta Sans"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="text-slate-800 antialiased selection:bg-indigo-200 selection:text-indigo-900">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <!-- Ambient Background Blobs -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+    </div>
+
+    <!-- Navbar (Identical to Landing Page) -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="index.html" class="flex items-center gap-2">
-                    <i class="ph ph-radar text-teal-600 text-3xl"></i>
-                    <span class="font-bold text-xl text-navy-900 tracking-tight">HorizonScan<span class="text-teal-600">AI</span></span>
+            <div class="flex justify-between h-20 items-center">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 bg-indigo-600 group-hover:bg-indigo-700 transition-colors rounded-xl flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-layer-group text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight text-slate-900 block leading-none">ImpactArchitect</span>
+                        <span class="text-[10px] font-extrabold text-indigo-500 uppercase tracking-widest">v3.3 AI Edition</span>
+                    </div>
                 </a>
-                <a href="index.html" class="text-sm font-bold text-slate-600 hover:text-teal-600 flex items-center gap-1">
-                    <i class="ph-bold ph-house"></i> Back to Home
-                </a>
+                
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="index.html#problem" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">The Problem</a>
+                    <a href="index.html#features" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Platform Features</a>
+                    <a href="blog.html" class="text-sm font-bold text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-book-open"></i> Articles</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="tool.html" class="bg-slate-900 hover:bg-indigo-600 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center gap-2 transform hover:-translate-y-0.5">
+                        Open Workspace <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <section class="pt-16 pb-10 bg-gradient-to-b from-white to-slate-50 text-center px-4">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-navy-900 mb-4 tracking-tight">Strategic Insights</h1>
-        <p class="text-slate-500 max-w-2xl mx-auto text-lg">Publications, methodologies, and case studies on navigating uncertainty and mastering horizon scanning.</p>
-    </section>
+    <!-- Header Section -->
+    <header class="pt-20 pb-12 text-center px-4 relative z-10">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">Articles & Guides</h1>
+        <p class="text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">Deep dives into the Theory of Change, COM-B behavior modeling, and how to successfully architect social impact and policy interventions.</p>
+    </header>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 mt-8">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+    <!-- Search & Filter Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-sm">
             <div class="relative w-full md:w-96">
-                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" placeholder="Search articles by title..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" placeholder="Search articles by title..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-shadow">
             </div>
             <div class="flex gap-3 w-full md:w-auto">
-                <select id="categoryFilter" class="w-full md:w-auto px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-teal-500">
+                <select id="categoryFilter" class="w-full md:w-auto px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 focus:outline-none focus:border-indigo-500 cursor-pointer">
                     <option value="all">All Categories</option><option value="Monitoring & Evaluation">Monitoring & Evaluation</option><option value="Intervention Strategy">Intervention Strategy</option><option value="Behavioral Diagnostics">Behavioral Diagnostics</option><option value="Innovation Intelligence">Innovation Intelligence</option><option value="Decision Making">Decision Making</option><option value="Methodology">Methodology</option>
                 </select>
-                <select id="sortFilter" class="w-full md:w-auto px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-teal-500">
+                <select id="sortFilter" class="w-full md:w-auto px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 focus:outline-none focus:border-indigo-500 cursor-pointer">
                     <option value="newest">Newest First</option>
                     <option value="oldest">Oldest First</option>
                 </select>
@@ -48,218 +88,268 @@
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+    <!-- Article Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 relative z-10">
         <div id="articleGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
-        <a href="blog/article/nothing-as-practical-as-good-theory-why-theory-based-evaluation-is-the-future-of-me.html" data-category="Monitoring & Evaluation" data-timestamp="1777075200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/tbe_evaluation.png" alt="Nothing as Practical as Good Theory: Why Theory-Based Evaluation is the Future of M&E" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/nothing-as-practical-as-good-theory-why-theory-based-evaluation-is-the-future-of-me.html" data-category="Monitoring & Evaluation" data-timestamp="1777075200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/tbe_evaluation.png" alt="Nothing as Practical as Good Theory: Why Theory-Based Evaluation is the Future of M&E" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Monitoring & Evaluation
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> April 25, 2026
+                    <i class="fa-regular fa-calendar"></i> April 25, 2026
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     Nothing as Practical as Good Theory: Why Theory-Based Evaluation is the Future of M&E
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     Data without context is just noise. Learn how Theory-Based Evaluation allows organizations to measure the invisible mechanisms that actually drive social impact.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/the-93-levers-of-change-how-the-bct-taxonomy-replaces-guesswork-with-precision.html" data-category="Intervention Strategy" data-timestamp="1776643200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/bct_taxonomy.png" alt="The 93 Levers of Change: How the BCT Taxonomy Replaces Guesswork with Precision" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/the-93-levers-of-change-how-the-bct-taxonomy-replaces-guesswork-with-precision.html" data-category="Intervention Strategy" data-timestamp="1776643200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/bct_taxonomy.png" alt="The 93 Levers of Change: How the BCT Taxonomy Replaces Guesswork with Precision" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Intervention Strategy
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> April 20, 2026
+                    <i class="fa-regular fa-calendar"></i> April 20, 2026
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     The 93 Levers of Change: How the BCT Taxonomy Replaces Guesswork with Precision
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     Once you have diagnosed a behavioral bottleneck using COM-B, what do you actually do? Discover how the Behavior Change Technique Taxonomy provides a scientific menu of precise interventions.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/the-illusion-of-agency-why-opportunity-is-the-most-ignored-variable-in-behavioral-design.html" data-category="Behavioral Diagnostics" data-timestamp="1776211200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/opportunity_variable.png" alt="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/the-illusion-of-agency-why-opportunity-is-the-most-ignored-variable-in-behavioral-design.html" data-category="Behavioral Diagnostics" data-timestamp="1776211200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/opportunity_variable.png" alt="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Behavioral Diagnostics
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> April 15, 2026
+                    <i class="fa-regular fa-calendar"></i> April 15, 2026
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     When programs fail, intervention designers frequently blame a 'lack of motivation' in the target audience. However, structural and environmental barriers are usually the true culprits.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/bridging-the-macro-and-micro-integrating-theory-of-change-with-the-com-b-model.html" data-category="Intervention Strategy" data-timestamp="1775779200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/toc_comb_bridge.png" alt="Bridging the Macro and Micro: Integrating Theory of Change with the COM-B Model" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/bridging-the-macro-and-micro-integrating-theory-of-change-with-the-com-b-model.html" data-category="Intervention Strategy" data-timestamp="1775779200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/toc_comb_bridge.png" alt="Bridging the Macro and Micro: Integrating Theory of Change with the COM-B Model" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Intervention Strategy
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> April 10, 2026
+                    <i class="fa-regular fa-calendar"></i> April 10, 2026
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     Bridging the Macro and Micro: Integrating Theory of Change with the COM-B Model
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     Theory of Change provides a flawless structural roadmap for impact, but it often fails to account for the friction of human psychology. Discover why integrating the COM-B model is the missing link for effective intervention design.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/gsi-radar-turning-invisible-innovation-into-actionable-intelligence.html" data-category="Innovation Intelligence" data-timestamp="1775001600000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/gsi.png" alt="GSI Radar: Turning Invisible Innovation into Actionable Intelligence" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/gsi-radar-turning-invisible-innovation-into-actionable-intelligence.html" data-category="Innovation Intelligence" data-timestamp="1775001600000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/gsi.png" alt="GSI Radar: Turning Invisible Innovation into Actionable Intelligence" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Innovation Intelligence
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> Apr 01, 2026
+                    <i class="fa-regular fa-calendar"></i> Apr 01, 2026
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     GSI Radar: Turning Invisible Innovation into Actionable Intelligence
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     Most innovation happens outside formal systems. GSI Radar captures these unseen signals and transforms them into structured, actionable, and safety-aware intelligence.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/you-will-never-have-enough-data-decision-making-under-uncertainty.html" data-category="Decision Making" data-timestamp="1712707200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/uncertainty.png" alt="You Will Never Have Enough Data: Decision-Making Under Uncertainty" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/you-will-never-have-enough-data-decision-making-under-uncertainty.html" data-category="Decision Making" data-timestamp="1712707200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/uncertainty.png" alt="You Will Never Have Enough Data: Decision-Making Under Uncertainty" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Decision Making
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> Apr 10, 2024
+                    <i class="fa-regular fa-calendar"></i> Apr 10, 2024
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     You Will Never Have Enough Data: Decision-Making Under Uncertainty
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     In complex systems, waiting for perfect information is the riskiest decision of all. The real skill is learning how to act under uncertainty.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
-        <a href="blog/article/horizon-scanning-vs-bayesian-analysis-radar-vs-detective.html" data-category="Methodology" data-timestamp="1712275200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
-            <div class="h-48 overflow-hidden relative border-b border-slate-100">
-                <img src="thum/bayes.png" alt="Horizon Scanning vs. Bayesian Analysis: Radar vs. Detective" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
-                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+        <a href="blog/article/horizon-scanning-vs-bayesian-analysis-radar-vs-detective.html" data-category="Methodology" data-timestamp="1712275200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-56 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/bayes.png" alt="Horizon Scanning vs. Bayesian Analysis: Radar vs. Detective" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     Methodology
                 </span>
             </div>
             
-            <div class="p-6 flex-1 flex flex-col">
+            <div class="p-6 flex-1 flex flex-col relative">
                 <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
-                    <i class="ph-fill ph-calendar-blank"></i> Apr 05, 2024
+                    <i class="fa-regular fa-calendar"></i> Apr 05, 2024
                 </div>
                 
-                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-indigo-600 transition-colors">
                     Horizon Scanning vs. Bayesian Analysis: Radar vs. Detective
                 </h3>
                 
-                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3 leading-relaxed">
                     Both methods detect weak signals—but one explores the future, while the other calculates the present. Knowing the difference changes everything.
                 </p>
                 
-                <div class="mt-auto">
-                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
-                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                <div class="mt-auto pt-4 border-t border-slate-100">
+                    <span class="text-indigo-600 text-sm font-bold flex items-center gap-2 group-hover:text-indigo-500 transition-colors">
+                        Read Article <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </div>
             </div>
         </a>
     
         </div>
-        <div id="emptyState" class="hidden text-center py-12 text-slate-500">
-            <i class="ph-fill ph-file-dashed text-4xl mb-3 text-slate-300"></i>
-            <p>No articles found matching your criteria.</p>
+        
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20 bg-white rounded-3xl border border-slate-200 shadow-sm mt-8">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-3xl text-slate-300 mx-auto mb-4"><i class="fa-solid fa-file-circle-xmark"></i></div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">No articles found</h3>
+            <p class="text-slate-500">We couldn't find any articles matching your search criteria.</p>
         </div>
     </main>
+
+    <!-- Footer (Identical to Landing Page) -->
+    <footer class="pt-20 pb-10 bg-slate-900 text-slate-400 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-16 border-b border-slate-800 pb-16">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-layer-group"></i></div>
+                        <span class="font-bold text-white text-xl tracking-tight">ImpactArchitect</span>
+                    </div>
+                    <p class="text-sm leading-relaxed max-w-sm mb-6">An advanced AI-integrated IDE designed to stress-test your social interventions using the Theory of Change and COM-B behavioral models before you spend a single dollar.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Product</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="tool.html" class="hover:text-white transition-colors">Open Workspace</a></li>
+                        <li><a href="index.html#features" class="hover:text-white transition-colors">Features</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Resources</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="blog.html" class="hover:text-white transition-colors">Articles & Guides</a></li>
+                        <li><a href="index.html#creator" class="hover:text-white transition-colors">About the Creator</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 ImpactArchitect. Built & Designed by <strong>Angga Conni Saputra</strong>.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -268,7 +358,6 @@
             const sortFilter = document.getElementById('sortFilter');
             const articleGrid = document.getElementById('articleGrid');
             const emptyState = document.getElementById('emptyState');
-            // Ambil semua card yang sudah di-generate oleh Node.js
             let cards = Array.from(document.querySelectorAll('.article-card'));
 
             function filterAndSort() {
@@ -277,7 +366,7 @@
                 const sortOrder = sortFilter.value;
                 let visibleCount = 0;
 
-                // 1. Proses Filter (Pencarian & Kategori)
+                // Filter Process
                 cards.forEach(card => {
                     const title = card.querySelector('h3').innerText.toLowerCase();
                     const cardCategory = card.getAttribute('data-category');
@@ -286,14 +375,14 @@
                     const matchesCategory = category === 'all' || cardCategory === category;
 
                     if (matchesSearch && matchesCategory) {
-                        card.style.display = 'flex'; // Munculkan
+                        card.style.display = 'flex';
                         visibleCount++;
                     } else {
-                        card.style.display = 'none'; // Sembunyikan
+                        card.style.display = 'none';
                     }
                 });
 
-                // 2. Proses Sorting (Newest / Oldest)
+                // Sorting Process
                 const visibleCards = cards.filter(card => card.style.display !== 'none');
                 
                 visibleCards.sort((a, b) => {
@@ -302,10 +391,10 @@
                     return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
                 });
 
-                // Terapkan urutan baru ke DOM
+                // Apply new sorting to DOM
                 visibleCards.forEach(card => articleGrid.appendChild(card));
 
-                // 3. Tampilkan Empty State jika tidak ada yang cocok
+                // Empty State Handle
                 if (visibleCount === 0) {
                     emptyState.classList.remove('hidden');
                 } else {
@@ -313,7 +402,7 @@
                 }
             }
 
-            // Pasang Event Listeners
+            // Event Listeners
             searchInput.addEventListener('input', filterAndSort);
             categoryFilter.addEventListener('change', filterAndSort);
             sortFilter.addEventListener('change', filterAndSort);

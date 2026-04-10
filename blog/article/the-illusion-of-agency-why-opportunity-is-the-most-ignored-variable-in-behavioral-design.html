@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design | Horizon Scan AI</title>
+    <title>The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design | ImpactArchitect</title>
     <meta name="description" content="When programs fail, intervention designers frequently blame a 'lack of motivation' in the target audience. However, structural and environmental barriers are usually the true culprits.">
     
     <meta property="og:title" content="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design">
@@ -12,75 +12,146 @@
     <meta property="og:image" content="../../thum/opportunity_variable.png">
     <meta property="og:type" content="article">
 
+    <!-- Tailwind & Plugins -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: { sans:['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
-                        navy: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' },
-                        teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' }
+                        linkedin: '#0A66C2'
                     }
                 }
             }
         }
     </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<body class="text-slate-800 antialiased selection:bg-indigo-200 selection:text-indigo-900">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="../../index.html" class="flex items-center gap-2">
-                    <i class="ph ph-radar text-teal-600 text-2xl"></i>
-                    <span class="font-bold text-lg text-navy-900 tracking-tight">HorizonScan<span class="text-teal-600">AI</span></span>
+    <!-- Navbar (Identical to Landing Page) -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="../../index.html" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 bg-indigo-600 group-hover:bg-indigo-700 transition-colors rounded-xl flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-layer-group text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight text-slate-900 block leading-none">ImpactArchitect</span>
+                        <span class="text-[10px] font-extrabold text-indigo-500 uppercase tracking-widest">v3.3 AI Edition</span>
+                    </div>
                 </a>
-                <a href="../../blog.html" class="text-sm font-bold text-slate-600 hover:text-teal-600 flex items-center gap-1">
-                    <i class="ph-bold ph-arrow-left"></i> Back to Articles
-                </a>
+                
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="../../index.html#problem" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">The Problem</a>
+                    <a href="../../index.html#features" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Platform Features</a>
+                    <a href="../../blog.html" class="text-sm font-bold text-indigo-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-book-open"></i> Articles</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <a href="../../tool.html" class="bg-slate-900 hover:bg-indigo-600 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center gap-2 transform hover:-translate-y-0.5">
+                        Open Workspace <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-        <span class="inline-block bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+    <!-- Article Header -->
+    <header class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10 text-center">
+        <span class="inline-block bg-white border border-slate-200 text-indigo-600 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 shadow-sm">
             Behavioral Diagnostics
         </span>
-        <h1 class="text-3xl md:text-5xl font-extrabold text-navy-900 mb-6 leading-tight">The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design</h1>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 leading-[1.15] tracking-tight">The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design</h1>
         
-        <div class="flex items-center gap-4 text-sm text-slate-500 font-medium">
+        <div class="flex items-center justify-center gap-4 text-sm text-slate-500 font-medium">
             <div class="flex items-center gap-2">
-                <i class="ph-fill ph-user-circle text-xl text-slate-400"></i> Angga Conni Saputra
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user-tie"></i></div>
+                <span class="text-slate-800 font-bold">Angga Conni Saputra</span>
             </div>
             <span>•</span>
             <div class="flex items-center gap-2">
-                <i class="ph-fill ph-calendar-blank text-lg text-slate-400"></i> April 15, 2026
+                <i class="fa-regular fa-calendar text-slate-400"></i> April 15, 2026
             </div>
         </div>
     </header>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <img src="../../thum/opportunity_variable.png" alt="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design" class="w-full h-auto max-h-[500px] object-cover rounded-2xl shadow-lg border border-slate-200" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+    <!-- Featured Image -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <img src="../../thum/opportunity_variable.png" alt="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design" class="w-full h-auto max-h-[500px] object-cover rounded-[2rem] shadow-2xl border border-slate-200/50" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop'">
     </div>
 
+    <!-- Article Body -->
     <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <article class="prose prose-slate prose-lg max-w-none prose-headings:text-navy-900 prose-a:text-teal-600 hover:prose-a:text-teal-500 prose-img:rounded-xl">
+        <article class="prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-2xl leading-relaxed">
             <p>When a public health campaign fails to increase healthy eating, or a corporate compliance program fails to change employee habits, the post-mortem analysis usually points to a single, convenient scapegoat: <em>The target audience just wasn't motivated enough.</em></p><p>This assumption is not only lazy; it is statistically and scientifically dangerous. In the <a href="https://thedecisionlab.com/reference-guide/psychology/the-com-b-model-for-behavior-change" target="_blank">COM-B model of behavior change</a>, behavior is generated by the interaction of Capability (C), Opportunity (O), and Motivation (M). Yet, time and again, intervention designers hyper-focus on Motivation (through marketing and persuasion) and Capability (through training), while entirely ignoring the heaviest anchor of all: <strong>Opportunity</strong>.</p><h3>The Two Faces of Opportunity</h3><p>In the COM-B framework, Opportunity is defined as the external factors that make a behavior possible or prompt it. It is strictly divided into two sub-categories:</p><p><strong>1. Physical Opportunity:</strong> This is the tangible environment. Does the person have the time, the financial resources, the physical access, and the geographic proximity to perform the behavior? <br><em>Example:</em> You cannot motivate a family to eat fresh vegetables if they live in a food desert where the nearest grocery store is 10 miles away and they lack reliable transportation.</p><p><strong>2. Social Opportunity:</strong> This is the cultural and interpersonal environment. Do the social norms, peer pressures, cultural stigmas, or legal structures allow the behavior? <br><em>Example:</em> An employee might have the software skills (Capability) and desire (Motivation) to use a new, transparent reporting tool, but if the unwritten corporate culture punishes whistleblowers (Social Opportunity), the behavior will not occur.</p><h3>The Danger of the "Vacuum" Theory of Change</h3><p>Many traditional Theory of Change (ToC) maps are drawn in a vacuum. They chart a path from Input &rarr; Activity &rarr; Output &rarr; Outcome, assuming a frictionless environment.</p><p>By ignoring Opportunity, organizations fall into the trap of "victim-blaming." They launch educational campaigns telling low-income mothers to feed their children expensive proteins, and when the data shows no change in stunting metrics, the program evaluators conclude that the mothers "failed to adopt the learnings."</p><p>A proper COM-B diagnostic would reveal that the mothers had high Motivation (they love their children) and high Capability (they understood the nutritional training), but zero Physical Opportunity (eggs are economically out of reach). The correct intervention was never an educational workshop; it was an economic subsidy or a structural redesign of the local food supply.</p><h3>Re-Architecting for Opportunity</h3><p>If your COM-B analysis reveals that Opportunity is the bottleneck, your intervention strategy must pivot drastically away from communication and toward environmental design.</p><p>This means utilizing interventions like <strong>Environmental Restructuring</strong> (changing the physical context), <strong>Restriction</strong> (using rules to reduce the opportunity to engage in competing behaviors), or <strong>Enablement</strong> (increasing means and reducing barriers).</p><p>We must stop trying to motivate people to climb over walls, and start using our resources to dismantle the walls instead.</p>
         </article>
         
-        <div class="mt-16 pt-8 border-t border-slate-200 text-center">
-            <h3 class="text-xl font-bold text-navy-900 mb-4">Share this insight</h3>
-            <div class="flex justify-center gap-4">
-                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#0A66C2] hover:text-white transition-colors"><i class="ph-fill ph-linkedin-logo text-xl"></i></a>
-                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#1DA1F2] hover:text-white transition-colors"><i class="ph-fill ph-twitter-logo text-xl"></i></a>
+        <!-- Share & Author Section -->
+        <div class="mt-20 pt-10 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 text-xl"><i class="fa-solid fa-user-tie"></i></div>
+                <div>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Written By</p>
+                    <p class="font-bold text-slate-900">Angga Conni Saputra</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-bold text-slate-500">Share Article:</span>
+                <a href="#" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-linkedin hover:border-linkedin hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-linkedin-in text-lg"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:border-slate-900 hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-x-twitter text-lg"></i></a>
             </div>
         </div>
     </main>
+
+    <!-- Footer (Identical to Landing Page) -->
+    <footer class="pt-20 pb-10 bg-slate-900 text-slate-400 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-16 border-b border-slate-800 pb-16">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white"><i class="fa-solid fa-layer-group"></i></div>
+                        <span class="font-bold text-white text-xl tracking-tight">ImpactArchitect</span>
+                    </div>
+                    <p class="text-sm leading-relaxed max-w-sm mb-6">An advanced AI-integrated IDE designed to stress-test your social interventions using the Theory of Change and COM-B behavioral models before you spend a single dollar.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Product</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="../../tool.html" class="hover:text-white transition-colors">Open Workspace</a></li>
+                        <li><a href="../../index.html#features" class="hover:text-white transition-colors">Features</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-6 uppercase tracking-widest text-sm">Resources</h4>
+                    <ul class="space-y-4 text-sm">
+                        <li><a href="../../blog.html" class="hover:text-white transition-colors">Articles & Guides</a></li>
+                        <li><a href="../../index.html#creator" class="hover:text-white transition-colors">About the Creator</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 ImpactArchitect. Built & Designed by <strong>Angga Conni Saputra</strong>.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>
