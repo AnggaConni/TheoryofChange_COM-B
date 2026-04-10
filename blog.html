@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Insights | Horizon Scan AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center gap-2">
+                    <i class="ph ph-radar text-teal-600 text-3xl"></i>
+                    <span class="font-bold text-xl text-navy-900 tracking-tight">HorizonScan<span class="text-teal-600">AI</span></span>
+                </a>
+                <a href="index.html" class="text-sm font-bold text-slate-600 hover:text-teal-600 flex items-center gap-1">
+                    <i class="ph-bold ph-house"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-16 pb-10 bg-gradient-to-b from-white to-slate-50 text-center px-4">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-navy-900 mb-4 tracking-tight">Strategic Insights</h1>
+        <p class="text-slate-500 max-w-2xl mx-auto text-lg">Publications, methodologies, and case studies on navigating uncertainty and mastering horizon scanning.</p>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 mt-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="relative w-full md:w-96">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" placeholder="Search articles by title..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500">
+            </div>
+            <div class="flex gap-3 w-full md:w-auto">
+                <select id="categoryFilter" class="w-full md:w-auto px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-teal-500">
+                    <option value="all">All Categories</option><option value="Monitoring & Evaluation">Monitoring & Evaluation</option><option value="Intervention Strategy">Intervention Strategy</option><option value="Behavioral Diagnostics">Behavioral Diagnostics</option><option value="Innovation Intelligence">Innovation Intelligence</option><option value="Decision Making">Decision Making</option><option value="Methodology">Methodology</option>
+                </select>
+                <select id="sortFilter" class="w-full md:w-auto px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 focus:outline-none focus:border-teal-500">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div id="articleGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+        <a href="blog/article/nothing-as-practical-as-good-theory-why-theory-based-evaluation-is-the-future-of-me.html" data-category="Monitoring & Evaluation" data-timestamp="1777075200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/tbe_evaluation.png" alt="Nothing as Practical as Good Theory: Why Theory-Based Evaluation is the Future of M&E" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Monitoring & Evaluation
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> April 25, 2026
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    Nothing as Practical as Good Theory: Why Theory-Based Evaluation is the Future of M&E
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    Data without context is just noise. Learn how Theory-Based Evaluation allows organizations to measure the invisible mechanisms that actually drive social impact.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/the-93-levers-of-change-how-the-bct-taxonomy-replaces-guesswork-with-precision.html" data-category="Intervention Strategy" data-timestamp="1776643200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/bct_taxonomy.png" alt="The 93 Levers of Change: How the BCT Taxonomy Replaces Guesswork with Precision" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Intervention Strategy
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> April 20, 2026
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    The 93 Levers of Change: How the BCT Taxonomy Replaces Guesswork with Precision
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    Once you have diagnosed a behavioral bottleneck using COM-B, what do you actually do? Discover how the Behavior Change Technique Taxonomy provides a scientific menu of precise interventions.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/the-illusion-of-agency-why-opportunity-is-the-most-ignored-variable-in-behavioral-design.html" data-category="Behavioral Diagnostics" data-timestamp="1776211200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/opportunity_variable.png" alt="The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Behavioral Diagnostics
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> April 15, 2026
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    The Illusion of Agency: Why 'Opportunity' is the Most Ignored Variable in Behavioral Design
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    When programs fail, intervention designers frequently blame a 'lack of motivation' in the target audience. However, structural and environmental barriers are usually the true culprits.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/bridging-the-macro-and-micro-integrating-theory-of-change-with-the-com-b-model.html" data-category="Intervention Strategy" data-timestamp="1775779200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/toc_comb_bridge.png" alt="Bridging the Macro and Micro: Integrating Theory of Change with the COM-B Model" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Intervention Strategy
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> April 10, 2026
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    Bridging the Macro and Micro: Integrating Theory of Change with the COM-B Model
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    Theory of Change provides a flawless structural roadmap for impact, but it often fails to account for the friction of human psychology. Discover why integrating the COM-B model is the missing link for effective intervention design.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/gsi-radar-turning-invisible-innovation-into-actionable-intelligence.html" data-category="Innovation Intelligence" data-timestamp="1775001600000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/gsi.png" alt="GSI Radar: Turning Invisible Innovation into Actionable Intelligence" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Innovation Intelligence
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> Apr 01, 2026
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    GSI Radar: Turning Invisible Innovation into Actionable Intelligence
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    Most innovation happens outside formal systems. GSI Radar captures these unseen signals and transforms them into structured, actionable, and safety-aware intelligence.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/you-will-never-have-enough-data-decision-making-under-uncertainty.html" data-category="Decision Making" data-timestamp="1712707200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/uncertainty.png" alt="You Will Never Have Enough Data: Decision-Making Under Uncertainty" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Decision Making
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> Apr 10, 2024
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    You Will Never Have Enough Data: Decision-Making Under Uncertainty
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    In complex systems, waiting for perfect information is the riskiest decision of all. The real skill is learning how to act under uncertainty.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        <a href="blog/article/horizon-scanning-vs-bayesian-analysis-radar-vs-detective.html" data-category="Methodology" data-timestamp="1712275200000" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
+            <div class="h-48 overflow-hidden relative border-b border-slate-100">
+                <img src="thum/bayes.png" alt="Horizon Scanning vs. Bayesian Analysis: Radar vs. Detective" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/1200x600/0f172a/ffffff?text=HorizonScan+AI'">
+                <span class="absolute top-4 left-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                    Methodology
+                </span>
+            </div>
+            
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 text-xs text-slate-400 mb-3 font-medium">
+                    <i class="ph-fill ph-calendar-blank"></i> Apr 05, 2024
+                </div>
+                
+                <h3 class="text-xl font-bold text-navy-900 mb-3 leading-snug group-hover:text-teal-600 transition-colors">
+                    Horizon Scanning vs. Bayesian Analysis: Radar vs. Detective
+                </h3>
+                
+                <p class="text-sm text-slate-600 mb-6 flex-1 line-clamp-3">
+                    Both methods detect weak signals—but one explores the future, while the other calculates the present. Knowing the difference changes everything.
+                </p>
+                
+                <div class="mt-auto">
+                    <span class="text-teal-600 text-sm font-bold flex items-center gap-1 group-hover:text-teal-500 transition-colors">
+                        Read Article <i class="ph-bold ph-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    
+        </div>
+        <div id="emptyState" class="hidden text-center py-12 text-slate-500">
+            <i class="ph-fill ph-file-dashed text-4xl mb-3 text-slate-300"></i>
+            <p>No articles found matching your criteria.</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            const articleGrid = document.getElementById('articleGrid');
+            const emptyState = document.getElementById('emptyState');
+            // Ambil semua card yang sudah di-generate oleh Node.js
+            let cards = Array.from(document.querySelectorAll('.article-card'));
+
+            function filterAndSort() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const category = categoryFilter.value;
+                const sortOrder = sortFilter.value;
+                let visibleCount = 0;
+
+                // 1. Proses Filter (Pencarian & Kategori)
+                cards.forEach(card => {
+                    const title = card.querySelector('h3').innerText.toLowerCase();
+                    const cardCategory = card.getAttribute('data-category');
+                    
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesCategory = category === 'all' || cardCategory === category;
+
+                    if (matchesSearch && matchesCategory) {
+                        card.style.display = 'flex'; // Munculkan
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none'; // Sembunyikan
+                    }
+                });
+
+                // 2. Proses Sorting (Newest / Oldest)
+                const visibleCards = cards.filter(card => card.style.display !== 'none');
+                
+                visibleCards.sort((a, b) => {
+                    const timeA = parseInt(a.getAttribute('data-timestamp'));
+                    const timeB = parseInt(b.getAttribute('data-timestamp'));
+                    return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+                });
+
+                // Terapkan urutan baru ke DOM
+                visibleCards.forEach(card => articleGrid.appendChild(card));
+
+                // 3. Tampilkan Empty State jika tidak ada yang cocok
+                if (visibleCount === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+                }
+            }
+
+            // Pasang Event Listeners
+            searchInput.addEventListener('input', filterAndSort);
+            categoryFilter.addEventListener('change', filterAndSort);
+            sortFilter.addEventListener('change', filterAndSort);
+        });
+    </script>
+</body>
+</html>
