@@ -1,0 +1,8 @@
+# User-agent: * berarti aturan ini berlaku untuk semua robot mesin pencari (Google, Bing, dll.)
+User-agent: *
+
+# Mengizinkan semua halaman publik untuk diindeks
+Allow: /
+Allow: /index.html
+Allow: /blog.html
+Allow: /tool.html
