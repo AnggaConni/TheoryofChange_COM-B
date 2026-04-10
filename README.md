@@ -1,110 +1,84 @@
-ImpactArchitect v3.3 🚀
+<div align="center">
+  
+  # 🏛️ ImpactArchitect v3.3
+  **Behaviorally-Informed Policy IDE & Strategic Intervention Canvas**
 
-Behaviorally-Informed Policy IDE & Theory of Change Canvas
+  [![Version](https://img.shields.io/badge/Version-3.3-blue.svg?style=for-the-badge&logo=appveyor)](https://github.com/AnggaConni/TheoryofChange_COM-B)
+  [![AI Powered](https://img.shields.io/badge/AI_Engine-Google_Gemini-purple.svg?style=for-the-badge&logo=google)](https://aistudio.google.com/)
+  [![Built With](https://img.shields.io/badge/Built_With-React_&_Tailwind-teal.svg?style=for-the-badge&logo=react)]()
+  [![Author](https://img.shields.io/badge/Author-Angga_Conni_Saputra-0A66C2.svg?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/pulse/why-does-toc-need-com-b-theory-change-canvas-angga-conni-saputra-bhnwc/)
 
-ImpactArchitect is a single-file, browser-based application designed to help policymakers, NGOs, and program managers design, diagnose, and improve social impact programs. It combines the Theory of Change (ToC) framework with Behavioral Science (COM-B Model), supercharged by Google Gemini AI.
+  <p align="center">
+    <strong>Stop guessing why your programs fail.</strong><br>
+    Transform complex social, corporate, and policy problems into highly logical, actionable strategies using the Theory of Change and COM-B Behavior Model.
+  </p>
+  
+</div>
 
-✨ Key Features
+---
 
-🧠 Smart Theory of Change Canvas
+## 📖 The Philosophy
 
-Visual Logic Flow: Map out Inputs, Activities, Outputs, Outcomes, and Impacts.
+Most strategic planners suffer from **"Activity-First Thinking"**. They design workshops, build applications, and distribute resources while completely ignoring the brutal realities of human psychology and environmental constraints. 
 
-Rich Text Editor: Click-to-edit interface supporting Bold, Italic, Lists, and Headers (Markdown style).
+ImpactArchitect plugs this hole by fusing two robust methodologies:
+1. **Theory of Change (ToC):** The macro-level roadmap that reverse-engineers success.
+2. **COM-B Model:** The micro-level behavioral engine that proves whether an Outcome (behavior) will actually happen based on *Capability*, *Opportunity*, and *Motivation*.
 
-Dynamic Layout: Text areas auto-expand to fit content for a clean, scroll-free experience.
+If ToC is the roadmap, COM-B is the reality check. ImpactArchitect forces clarity before action, diagnosis before intervention, and logic before budget.
 
-🤖 AI-Powered Assistance (Gemini)
+---
 
-Magic Wand: Auto-fill empty nodes based on context from previous steps.
+## ✨ Core Features
 
-Auto-Complete All: Generate a full program draft from just an Impact statement.
+### 🧠 Smart Theory of Change Canvas
+* **Visual Logic Flow:** Map out Inputs, Activities, Outputs, Outcomes, and Impacts linearly.
+* **Rich Text Editor:** Click-to-edit interface supporting Bold, Italic, Lists, and Headers.
+* **Dynamic Layout:** Text areas auto-expand to fit content for a clean, scroll-free experience.
 
-Logic Cross-Check: AI analyzes the gap between your Outputs and Outcomes.
+### 🤖 Context-Aware AI (Google Gemini)
+* **Magic Wand:** Auto-fill empty nodes based on the logical context of your previous steps.
+* **Auto-Complete All:** Generate a full program draft globally from just an Impact statement.
+* **Behavioral Reality Check:** AI analyzes specific Outcome nodes to identify hidden behavioral bottlenecks.
+* **Strategic Interventions:** Stop guessing. The AI suggests precise programmatic interventions based on your lowest COM-B scores.
 
-Strategic Interventions: AI suggests improvements based on behavioral barriers.
+### 📊 Behavioral Diagnostics (COM-B)
+* **Triangular Radar Charts:** Instantly visualize Capability, Opportunity, and Motivation scores.
+* **Auto-Risk Assessment:** Automatic risk labeling (Safe, Medium, High, Critical) to prevent launching failing activities.
+* **Sandbox Tutorials:** Practice diagnosing logic gaps using pre-loaded dummy datasets (e.g., Farmer Welfare, Stunting Reduction).
 
-📊 Behavioral Analysis (COM-B)
+### 🚀 Built-in Static Blog Engine
+* **Automated Publishing:** Includes a Node.js script to dynamically generate a beautiful, SEO-friendly blog and individual article pages from a single `data.json` file.
+* **GitHub Actions Ready:** Push changes to your JSON file and let the automated CI/CD pipeline build and deploy your articles.
 
-COM-B Radar Chart: Visualize Capability, Opportunity, and Motivation scores.
+---
 
-Risk Assessment: Automatic risk labeling (Safe, Medium, High, Critical) based on behavioral scores.
+## 🛠️ Technology Stack
 
-Deep Diagnosis: AI provides specific behavioral diagnoses for human-centric outcomes.
+ImpactArchitect is built with a **"No-Build" architecture** for the main app, ensuring maximum portability and zero-configuration for end users.
 
-🌍 Other Features
+| Category | Technology |
+| :--- | :--- |
+| **Core UI** | React 18 & ReactDOM (via CDN) |
+| **Styling** | Tailwind CSS (via CDN) |
+| **Icons & Fonts** | FontAwesome 6, Plus Jakarta Sans |
+| **Visualization** | Chart.js (Radar Charts) |
+| **AI Engine** | Google Gemini API (`gemini-2.5-flash`) |
+| **Markdown Parsing** | Marked.js |
+| **Blog Generator** | Node.js, GitHub Actions (`build.yml`) |
 
-Bilingual: One-click toggle between English and Indonesian.
+---
 
-Portable: Single HTML file. No installation required.
+## 📂 Project Structure
 
-Save/Load: Export your project as JSON.
-
-PDF Report: Generate a comprehensive printable report with diagrams and AI analysis.
-
-🛠️ Technology Stack
-
-Built with a "No-Build" architecture for maximum portability:
-
-Core: React 18 & ReactDOM (via CDN).
-
-Styling: Tailwind CSS (via CDN).
-
-Icons: FontAwesome 6.
-
-Visualization: Chart.js (Radar Charts).
-
-AI Engine: Google Gemini API (gemini-2.5-flash).
-
-Markdown: Marked.js.
-
-Fonts: Google Fonts (Plus Jakarta Sans & Press Start 2P).
-
-🚀 How to Use
-
-Prerequisites
-
-You need an active internet connection (to load the CDN libraries).
-
-A modern web browser (Chrome, Edge, Firefox, Safari).
-
-A Google Gemini API Key (Free). [Get it here.] (https://aistudio.google.com/app/api-keys)
-
-Installation
-
-Download the ImpactArchitect_v3.3.html file.
-
-Double-click the file to open it in your browser.
-
-Paste your Gemini API Key in the top toolbar to unlock AI features.
-
-📖 User Guide
-
-1. Designing a Program
-
-Click the buttons in the toolbar (Impact, Outcome, etc.) to add nodes.
-
-Click inside a card to edit text. Use the formatting toolbar for styling.
-
-Drag and drop is not required; the layout sorts automatically by logic layer.
-
-2. using AI features
-
-Magic Wand (In-Card): Click the small wand icon inside a card to have AI write the content for you.
-
-Auto-Complete (Global): Click the button in the top right to fill all empty cards at once.
-
-3. Behavioral Diagnosis
-
-Click on any Outcome or Activity card.
-
-A side panel will open showing the COM-B analysis.
-
-Adjust the sliders manually or click the "Magic Auto-Diagnose" button to have AI estimate the scores based on the text context.
-
-🤝 Contributing
-
-This is a standalone tool created by Angga Conni Saputra.
-Feel free to fork, modify, or use it for your social impact projects!
-
-“Designing impact, one logic block at a time.”
+```text
+├── index.html                 # The Premium Landing Page
+├── tool.html                  # The ImpactArchitect Workspace App
+├── blog.html                  # The Blog Index (Auto-generated)
+├── blog/
+│   ├── data.json              # Your blog content database
+│   └── article/               # Generated single article HTML pages
+├── scripts/
+│   └── generate-blog.js       # Node.js script to build the blog
+└── .github/workflows/
+    └── build.yml              # CI/CD pipeline for auto-publishing
