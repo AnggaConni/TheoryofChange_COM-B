@@ -4,7 +4,7 @@ const path = require('path');
 // ==========================================
 // CONFIGURATION
 // ==========================================
-const SITE_URL = 'https://anggaconni.github.io/TheoryofChange_COM-B'; // Change this to your actual domain
+const SITE_URL = 'https://anggaconni.github.io/TheoryofChange_COM-B'; // PENTING: Untuk Meta Tags / SEO
 const dataPath = path.join(__dirname, '../blog/data.json');
 const blogIndexPath = path.join(__dirname, '../blog.html');
 const articlesDir = path.join(__dirname, '../blog/article');
@@ -32,7 +32,7 @@ const articles = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
 articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 // Ambil Kategori Unik untuk Filter
-const uniqueCategories = [...new Set(articles.map(article => article.category))];
+const uniqueCategories =[...new Set(articles.map(article => article.category))];
 let categoryOptions = `<option value="all">All Categories</option>`;
 uniqueCategories.forEach(cat => {
     categoryOptions += `<option value="${cat}">${cat}</option>`;
@@ -48,7 +48,18 @@ articles.forEach(article => {
     const slug = slugify(article.title);
     const articleUrl = `blog/article/${slug}.html`;
     const fallbackImage = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop';
-    const imageUrl = article.image || article.imageUrl || fallbackImage;
+    
+    // Normalisasi Gambar
+    let imageUrl = article.image || article.imageUrl || fallbackImage;
+    
+    // TWEAK: URL Absolute untuk Meta Tags & Thumbnail Sosmed
+    const articleAbsoluteUrl = `${SITE_URL}/${articleUrl}`;
+    
+    let ogImageUrl = imageUrl;
+    if (!imageUrl.startsWith('http')) {
+        const cleanImagePath = imageUrl.replace(/^[\.\/]+/, ''); 
+        ogImageUrl = `${SITE_URL}/${cleanImagePath}`;
+    }
 
     // ---------------------------------------------------------
     // A. Buat Card untuk dimasukkan ke blog.html (List)
@@ -56,7 +67,7 @@ articles.forEach(article => {
     articleCards += `
         <a href="${articleUrl}" data-category="${article.category}" data-timestamp="${new Date(article.date).getTime()}" class="article-card bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col group transform hover:-translate-y-1">
             <div class="h-56 overflow-hidden relative border-b border-slate-100">
-                <img src="${imageUrl}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${fallbackImage}'">
+                <img src="${imageUrl.startsWith('http') ? imageUrl : imageUrl.replace(/^[\.\/]+/, '')}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='${fallbackImage}'">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span class="absolute top-4 left-4 bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm z-10">
                     ${article.category}
@@ -96,11 +107,21 @@ articles.forEach(article => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${article.title} | ImpactArchitect</title>
     <meta name="description" content="${article.excerpt}">
+    <link rel="canonical" href="${articleAbsoluteUrl}">
     
+    <!-- Open Graph / Facebook / LinkedIn / WA -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${articleAbsoluteUrl}">
     <meta property="og:title" content="${article.title}">
     <meta property="og:description" content="${article.excerpt}">
-    <meta property="og:image" content="../../${imageUrl}">
-    <meta property="og:type" content="article">
+    <meta property="og:image" content="${ogImageUrl}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="${articleAbsoluteUrl}">
+    <meta name="twitter:title" content="${article.title}">
+    <meta name="twitter:description" content="${article.excerpt}">
+    <meta name="twitter:image" content="${ogImageUrl}">
 
     <!-- Tailwind & Plugins -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -124,6 +145,29 @@ articles.forEach(article => {
     </script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        
+        /* CSS UNTUK RICH TEXT (Table, Callout, Diagram) - ImpactArchitect Theme */
+        .prose table { width: 100%; border-collapse: collapse; margin-top: 2rem; margin-bottom: 2rem; }
+        .prose th, .prose td { border: 1px solid #e2e8f0; padding: 1rem; text-align: left; }
+        .prose th { background-color: #f1f5f9; color: #0f172a; font-weight: 700; }
+        .prose tr:nth-child(even) { background-color: #f8fafc; }
+        
+        .table-responsive { overflow-x: auto; width: 100%; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin: 2rem 0; }
+        .table-responsive table { margin: 0; border: none; }
+
+        /* Style Callout Box (Indigo) */
+        .callout { padding: 1.5rem; border-radius: 1rem; margin: 2rem 0; border-left: 4px solid #4f46e5; background-color: #eef2ff; }
+        .callout h4 { margin-top: 0 !important; color: #1e1b4b !important; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+        .callout p:last-child { margin-bottom: 0 !important; }
+
+        /* Style Blockquote */
+        .prose blockquote { border-left-color: #4f46e5; font-style: normal; background-color: #f1f5f9; padding: 1rem 1.5rem; border-radius: 0 1rem 1rem 0; color: #334155; }
+        .prose blockquote p { margin: 0; }
+
+        /* Style Container Chart / Flowchart */
+        .chart-container { background: white; border: 1px solid #e2e8f0; border-radius: 1.25rem; padding: 2rem; margin: 2.5rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center; }
+        .chart-container img { margin: 0 auto; border-radius: 0.75rem; }
+        .chart-caption { font-size: 0.875rem; color: #64748b; margin-top: 1rem; text-align: center; font-style: italic; }
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-indigo-200 selection:text-indigo-900">
@@ -178,12 +222,12 @@ articles.forEach(article => {
 
     <!-- Featured Image -->
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <img src="../../${imageUrl}" alt="${article.title}" class="w-full h-auto max-h-[500px] object-cover rounded-[2rem] shadow-2xl border border-slate-200/50" onerror="this.src='${fallbackImage}'">
+        <img src="${imageUrl.startsWith('http') ? imageUrl : '../../' + imageUrl.replace(/^[\.\/]+/, '')}" alt="${article.title}" class="w-full h-auto max-h-[500px] object-cover rounded-[2rem] shadow-2xl border border-slate-200/50" onerror="this.src='${fallbackImage}'">
     </div>
 
     <!-- Article Body -->
     <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <article class="prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:text-indigo-500 prose-img:rounded-2xl leading-relaxed">
+        <article class="prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-headings:tracking-tight prose-a:text-indigo-600 hover:prose-a:text-indigo-500 hover:prose-a:underline prose-a:no-underline prose-img:rounded-2xl leading-relaxed">
             ${article.content}
         </article>
         
@@ -198,8 +242,8 @@ articles.forEach(article => {
             </div>
             <div class="flex items-center gap-4">
                 <span class="text-sm font-bold text-slate-500">Share Article:</span>
-                <a href="#" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-linkedin hover:border-linkedin hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-linkedin-in text-lg"></i></a>
-                <a href="#" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:border-slate-900 hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-x-twitter text-lg"></i></a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleAbsoluteUrl)}" target="_blank" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-linkedin hover:border-linkedin hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-linkedin-in text-lg"></i></a>
+                <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(articleAbsoluteUrl)}&text=${encodeURIComponent(article.title)}" target="_blank" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:border-slate-900 hover:text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-1"><i class="fa-brands fa-x-twitter text-lg"></i></a>
             </div>
         </div>
     </main>
@@ -264,6 +308,13 @@ const blogIndexHtml = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Articles & Guides | ImpactArchitect</title>
     
+    <!-- Meta SEO & Open Graph untuk halaman index Blog -->
+    <meta name="description" content="Deep dives into the Theory of Change, COM-B behavior modeling, and how to successfully architect social impact.">
+    <meta property="og:title" content="Articles & Guides | ImpactArchitect">
+    <meta property="og:description" content="Deep dives into the Theory of Change, COM-B behavior modeling, and how to successfully architect social impact.">
+    <meta property="og:url" content="${SITE_URL}/blog.html">
+    <meta property="og:type" content="website">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
