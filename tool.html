@@ -1522,21 +1522,40 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                         </div>
                         <div class="com-b-grid">
 
-                                <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
-                                    <h4>🔍 DIAGNOSIS (Root Cause)</h4>
-                                    ${marked.parse(v.summary || 'No diagnosis recorded.')}
-                                </div>
                                 <div class="com-b-section" style="background: #f0fdf4; padding: 15px; border-radius: 8px;">
                                     <h4>💡 INTERVENTION STRATEGY</h4>
                                     ${marked.parse(v.intervention || 'No intervention recorded.')}
                                 </div>
                             </div>
-                            <div class="score-summary">
-                                <span class="score-pill">Capability: ${v.capability.score}/10</span>
-                                <span class="score-pill">Opportunity: ${v.opportunity.score}/10</span>
-                                <span class="score-pill">Motivation: ${v.motivation.score}/10</span>
+                            
+                            <div style="margin-top: 20px; border-top: 1px dashed #e2e8f0; padding-top: 20px;">
+                                <h4 style="font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 5px;">📊 COM-B Breakdown Detail</h4>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                            <strong style="color: #334155; font-size: 13px;">Capability (Kemampuan)</strong>
+                                            <span class="score-pill" style="margin: 0;">${v.capability.score}/10</span>
+                                        </div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.capability.notes || '-'}</div>
+                                    </div>
+                                    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                            <strong style="color: #334155; font-size: 13px;">Opportunity (Kesempatan)</strong>
+                                            <span class="score-pill" style="margin: 0;">${v.opportunity.score}/10</span>
+                                        </div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.opportunity.notes || '-'}</div>
+                                    </div>
+                                    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                            <strong style="color: #334155; font-size: 13px;">Motivation (Motivasi)</strong>
+                                            <span class="score-pill" style="margin: 0;">${v.motivation.score}/10</span>
+                                        </div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.motivation.notes || '-'}</div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            </div>
+                        
                         `;
                 }).join('')}
                 <div class="footer">Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3</div>
