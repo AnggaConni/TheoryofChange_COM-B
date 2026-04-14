@@ -1515,14 +1515,12 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                         if (!n) return '';
                         return `
                         <div class="com-b-entry">
+                            <div class="com-b-header">Target Behavior:</div>
+                            <div style="font-weight: normal; font-size: 14px; color: #334155; margin-bottom: 20px; padding-left: 10px; border-left: 3px solid #cbd5e1;">
+                                ${marked.parse(n.content || '')}
+                            </div>
 
-                        <div class="com-b-header">Target Behavior:</div>
-                        <div style="font-weight: normal; font-size: 14px; color: #334155; margin-bottom: 20px; padding-left: 10px; border-left: 3px solid #cbd5e1;">
-                            ${marked.parse(n.content || '')}
-                        </div>
-
-
-                        <div class="com-b-grid">
+                            <div style="display: flex; flex-direction: column; gap: 20px;">
                                 <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px; border: 1px solid #fce7f3;">
                                     <h4>🔍 DIAGNOSIS (Root Cause)</h4>
                                     ${marked.parse(v.summary || 'No diagnosis recorded.')}
@@ -1540,28 +1538,27 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                                     <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
                                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                             <strong style="color: #334155; font-size: 13px;">Capability (Kemampuan)</strong>
-                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.capability.score}/10</span>
+                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.capability?.score || 0}/10</span>
                                         </div>
-                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.capability.notes || '-'}</div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.capability?.notes || '-'}</div>
                                     </div>
                                     <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
                                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                             <strong style="color: #334155; font-size: 13px;">Opportunity (Kesempatan)</strong>
-                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.opportunity.score}/10</span>
+                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.opportunity?.score || 0}/10</span>
                                         </div>
-                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.opportunity.notes || '-'}</div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.opportunity?.notes || '-'}</div>
                                     </div>
                                     <div style="background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9;">
                                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                             <strong style="color: #334155; font-size: 13px;">Motivation (Motivasi)</strong>
-                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.motivation.score}/10</span>
+                                            <span class="score-pill" style="margin: 0; background: #e0f2fe; color: #0369a1;">${v.motivation?.score || 0}/10</span>
                                         </div>
-                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.motivation.notes || '-'}</div>
+                                        <div style="font-size: 13px; color: #475569; line-height: 1.5;">${v.motivation?.notes || '-'}</div>
                                     </div>
                                 </div>
                             </div>
-                        
-                        `;
+                        </div> `;
                 }).join('')}
                 <div class="footer">Created by <strong>Angga Conni Saputra</strong> using ImpactArchitect v3.3</div>
                 <script>window.print()<\/script></body></html>
