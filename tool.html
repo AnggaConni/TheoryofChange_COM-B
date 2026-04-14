@@ -1450,7 +1450,7 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                 return layerNodes.map(n => `
                     <div class="node-box ${n.risk === 'high' || n.risk === 'critical' ? 'risk-' + n.risk : ''}">
                         <span class="badge" style="color: ${layer === 'input' ? '#7c3aed' : ''}">${n.type}</span>
-                        <strong>${n.content}</strong>
+                        <div style="font-weight: normal; font-size: 14px; margin-top: 10px; line-height: 1.6;">${marked.parse(n.content)}</div>
                     </div>
                 `).join('') + (index < layers.length - 1 && layerNodes.length > 0 ? '<div class="arrow">↓</div>' : '');
             }).join('');
@@ -1472,7 +1472,7 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                     .radar-snapshot { float: right; width: 320px; margin: 0 0 20px 30px; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
                     .com-b-entry { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 30px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); page-break-inside: avoid; }
                     .com-b-header { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
-                    .com-b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                    .com-b-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
                     .com-b-section h4 { font-size: 12px; text-transform: uppercase; font-weight: 800; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
                     .com-b-section p, .com-b-section ul { font-size: 13px; color: #334155; line-height: 1.5; margin: 0; }
                     .com-b-section ul { padding-left: 20px; }
@@ -1497,8 +1497,13 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                         if (!n) return '';
                         return `
                         <div class="com-b-entry">
-                            <div class="com-b-header">Target Behavior: ${marked.parseInline(n.content || '')}</div>
-                            <div class="com-b-grid">
+
+                        <div class="com-b-header">Target Behavior:</div>
+                        <div style="font-weight: normal; font-size: 14px; color: #334155; margin-bottom: 20px; padding-left: 10px; border-left: 3px solid #cbd5e1;">
+                            ${marked.parse(n.content || '')}
+                        </div>
+                        <div class="com-b-grid">
+
                                 <div class="com-b-section" style="background: #fdf4ff; padding: 15px; border-radius: 8px;">
                                     <h4>🔍 DIAGNOSIS (Root Cause)</h4>
                                     ${marked.parse(v.summary || 'No diagnosis recorded.')}
