@@ -1360,7 +1360,8 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                     const ctx = exportChartRef.current.getContext('2d');
                     const existingChart = Chart.getChart(exportChartRef.current);
                     if (existingChart) existingChart.destroy();
-                    new Chart(ctx, {
+                    
+                    const myChart = new Chart(ctx, {
                         type: 'radar',
                         data: {
                             labels: [t.capability, t.opportunity, t.motivation],
@@ -1374,17 +1375,19 @@ const ConnectionLine = ({ sourceId, targetRef }) => {
                             }]
                         },
                         options: {
-                            responsive: false, // Must be false for hidden canvas
-                            animation: {
-                                onComplete: function() {
-                                    resolve(this.toBase64Image());
-                                    this.destroy();
-                                }
-                            },
+                            responsive: false, 
+                            animation: false, // ⚠️ MATIKAN ANIMASI DI SINI
                             scales: { r: { suggestedMin: 0, suggestedMax: 10, ticks: { display: false } } },
                             plugins: { legend: { display: false } }
                         }
                     });
+
+                    // Karena animasi mati, chart selesai dirender hampir seketika.
+                    // Beri jeda kecil agar browser selesai menggambar sebelum diubah ke Base64
+                    setTimeout(() => {
+                        resolve(myChart.toBase64Image());
+                        myChart.destroy();
+                    }, 100);
                 });
             };
 
